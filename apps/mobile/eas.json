@@ -1,0 +1,15 @@
+{
+  "cli": {
+    "version": ">= 4.0.0"
+  },
+  "build": {
+    "apk": {
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_APP_DIR": "apps/mobile"
+      }
+    }
+  }
+}

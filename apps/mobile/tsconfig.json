@@ -4,9 +4,20 @@
     "strict": true,
     "baseUrl": "./",
     "paths": {
-      "@peaks/core": ["../../packages/core/src"],
-      "@peaks/ui": ["../../packages/ui/src"]
+      "@peaks/core": [
+        "../../packages/core/src"
+      ],
+      "@peaks/ui": [
+        "../../packages/ui/src"
+      ]
     }
   },
-  "include": ["index.ts", "app/**/*", "**/*.ts", "**/*.tsx"]
+  "include": [
+    "index.ts",
+    "app/**/*",
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+  ]
 }

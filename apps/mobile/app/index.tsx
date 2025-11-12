@@ -35,6 +35,10 @@ export default function HomeScreen() {
   );
 }
 
+export const options = {
+  headerShown: false,
+};
+
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,

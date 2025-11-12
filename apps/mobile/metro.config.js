@@ -5,14 +5,11 @@ const projectRoot = __dirname;
 const workspaceRoot = path.resolve(projectRoot, "..", "..");
 
 const config = getDefaultConfig(projectRoot);
-
-config.watchFolders = [workspaceRoot];
-config.resolver = {
-  ...(config.resolver ?? {}),
-  extraNodeModules: {
-    ...(config.resolver?.extraNodeModules ?? {}),
-    "@peaks/core": path.join(workspaceRoot, "packages/core"),
-  },
+config.watchFolders = [...config.watchFolders, workspaceRoot];
+config.resolver ??= { sourceExts: [], assetExts: [] };
+config.resolver.extraNodeModules = {
+  ...(config.resolver.extraNodeModules ?? {}),
+  "@peaks/core": path.join(workspaceRoot, "packages/core"),
 };
 
 module.exports = config;

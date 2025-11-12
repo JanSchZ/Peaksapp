@@ -1,4 +1,4 @@
-import { Slot, Stack } from "expo-router";
+import { Slot } from "expo-router";
 import { useFonts, Inter_500Medium, Inter_600SemiBold } from "@expo-google-fonts/inter";
 import { SplashScreen } from "expo-router";
 import { useEffect } from "react";
@@ -18,9 +18,5 @@ export default function Layout() {
     return null;
   }
 
-  return (
-    <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: "#020617" } }}>
-      <Slot />
-    </Stack>
-  );
+  return <Slot />;
 }

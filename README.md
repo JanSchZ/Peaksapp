@@ -19,6 +19,16 @@ npm install
 npm run dev               # turbo spawns web + mobile
 ```
 
+### Quick scripts (macOS & Windows)
+
+| Script | Descripción |
+| --- | --- |
+| `scripts/setup.command` / `scripts/setup.ps1` | Instala dependencias, valida Node/NPM y ejecuta `expo-doctor` (sin validación estricta) para detectar conflictos. Usa `.command` (doble click) en macOS o `pwsh -File scripts/setup.ps1` en Windows. |
+| `scripts/start.command` / `scripts/start.ps1` | Lanza web + Expo (con QR) + backend en terminales separadas. macOS abre pestañas en Terminal vía AppleScript; Windows abre nuevas ventanas de PowerShell. Si no existe `apps/backend`, muestra un aviso. |
+| `scripts/build-apk.command` / `scripts/build-apk.ps1` | Ejecuta `eas build --platform android --profile apk --local` dentro de `apps/mobile` (necesita Android SDK + JDK). En Windows usa PowerShell (`pwsh -File scripts/build-apk.ps1`). |
+
+> Nota: si PowerShell bloquea la ejecución, podrás habilitarla temporalmente con `Set-ExecutionPolicy -Scope Process Bypass`. En macOS, marca los `.command` como ejecutables (`chmod +x scripts/*.command`) y haz doble clic.
+
 Individual app development:
 
 ```bash
