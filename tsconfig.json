@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {
+      "@peaks/core": ["packages/core/src"],
+      "@peaks/ui": ["packages/ui/src"],
+      "@peaks/config/*": ["packages/config/*"]
+    }
+  },
+  "include": [
+    "apps/**/*",
+    "packages/**/*",
+    "turbo.d.ts"
+  ],
+  "exclude": ["node_modules", "dist", "build"]
+}

@@ -1,0 +1,12 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "baseUrl": "./",
+    "paths": {
+      "@peaks/core": ["../../packages/core/src"],
+      "@peaks/ui": ["../../packages/ui/src"]
+    }
+  },
+  "include": ["index.ts", "app/**/*", "**/*.ts", "**/*.tsx"]
+}

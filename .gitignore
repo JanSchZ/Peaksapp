@@ -1,0 +1,26 @@
+# Node
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.turbo
+
+# Outputs
+.next
+out
+build
+dist
+.expo
+.expo-shared
+android
+ios
+
+# Env
+.env*
+.supabase
+
+# Misc
+.DS_Store
+.idea
+.vscode

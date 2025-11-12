@@ -1,0 +1,12 @@
+{
+  "name": "@peaks/config",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "files": ["tsconfig", "eslint", "tailwind"],
+  "exports": {
+    "./tsconfig": "./tsconfig/base.json",
+    "./eslint": "./eslint/index.js",
+    "./tailwind": "./tailwind/index.js"
+  }
+}
