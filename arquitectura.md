@@ -270,3 +270,5 @@ Este documento resume el enfoque técnico recomendado para construir la platafor
 ---
 
 > Este blueprint está pensado para ejecutar un MVP sólido y escalable. Si cambian prioridades (p. ej., pagos o integraciones en v1), se ajustan fases sin modificar el core.
+
+

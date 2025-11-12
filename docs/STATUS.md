@@ -9,7 +9,7 @@
 - ✅ App móvil Expo con Router, tipografías Inter, pantallas Home + Plan y configuración de Metro para compartir paquetes.
 - ✅ Tooling: ESLint (web y mobile), Tailwind 3, shared config, GitHub Actions CI (install → lint → build web), Turbo tasks.
 - ✅ Supabase helpers (server/browser) + validación de env con Zod.
-- ✅ Cloudflare R2 documento en ARCHITECTURE.md + `.env.example` con llaves esperadas.
+- ✅ Cloudflare R2 documento en arquitectura.md + `.env.example` con llaves esperadas.
 
 ## Próximos pasos sugeridos
 

@@ -56,4 +56,4 @@ npm run build -- --filter=@peaks/web   # Next.js production build
 npx drizzle-kit generate # generate SQL from Drizzle schema
 ```
 
-See `ARCHITECTURE.md` for the macro blueprint, roadmap, data model and integrations plan.
+See `arquitectura.md` for the macro blueprint, roadmap, data model and integrations plan.
