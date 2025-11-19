@@ -32,6 +32,8 @@ Congratulations! Your Peaksapp monorepo is now fully set up with a **state-of-th
 
 ## 🚀 Next Steps
 
+> **⚠️ IMPORTANTE**: Antes de ejecutar las aplicaciones, asegúrate de instalar las dependencias correctamente (ver paso 2 abajo). Hay un paso adicional requerido para resolver un conflicto de versiones de `ajv`.
+
 ### 1. Set Up Supabase
 
 1. Create a Supabase project at [supabase.com](https://supabase.com)
@@ -51,6 +53,32 @@ EXPO_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 ```
 
 ### 2. Run the Applications
+
+**Option A: Use Setup Script (Recommended)**:
+```bash
+# macOS / Linux
+./scripts/setup.command
+
+# Windows (PowerShell)
+.\scripts\setup.ps1
+```
+
+**Option B: Quick Install Script**:
+```bash
+# From the root directory
+./install.sh
+```
+
+**Option C: Manual Install**:
+```bash
+# From the root directory
+npm install --legacy-peer-deps
+
+# Fix ajv version conflict (required for Expo)
+npm install ajv@^8.17.1 --save-dev --legacy-peer-deps
+```
+
+**Then Run:**
 
 **Web App** (Coach Dashboard):
 ```bash
@@ -170,6 +198,19 @@ This implementation follows your "Premium" aesthetic requirements:
 ---
 
 ## 🆘 Need Help?
+
+### Common Issues
+
+If you encounter issues during setup or development, check the **[TROUBLESHOOTING.md](./TROUBLESHOOTING.md)** guide. It covers:
+
+- ✅ Module resolution errors (`ajv`, `@peaks/ui` not found)
+- ✅ Expo startup failures
+- ✅ Supabase Auth configuration
+- ✅ Build and TypeScript errors
+- ✅ macOS script issues
+- ✅ Tailwind and ESLint configuration
+
+### Documentation
 
 - **Supabase Docs**: [supabase.com/docs](https://supabase.com/docs)
 - **Next.js Docs**: [nextjs.org/docs](https://nextjs.org/docs)

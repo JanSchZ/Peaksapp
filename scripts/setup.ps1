@@ -12,7 +12,10 @@ if (-not (Get-Command npx -ErrorAction SilentlyContinue)) {
   Write-Error "npx (npm >= 5.2) is required"
 }
 
-npm install
+npm install --legacy-peer-deps
+
+Write-Host "[setup] Fixing ajv version conflict for Expo..."
+npm install ajv@^8.17.1 --save-dev --legacy-peer-deps
 
 Write-Host "[setup] Checking Expo workspace dependencies..."
 try {

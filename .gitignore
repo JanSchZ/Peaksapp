@@ -18,9 +18,16 @@ ios
 
 # Env
 .env*
+!ENV_EXAMPLE.md
 .supabase
 
 # Misc
 .DS_Store
 .idea
 .vscode
+
+# Temporary/Debug files
+build_log*.txt
+*.log.txt
+debug_*.txt
+

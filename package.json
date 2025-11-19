@@ -17,6 +17,7 @@
   ],
   "devDependencies": {
     "@peaks/config": "file:packages/config",
+    "ajv": "^8.17.1",
     "drizzle-kit": "^0.31.6",
     "eslint-config-expo": "^10.0.0",
     "turbo": "^2.1.1"
