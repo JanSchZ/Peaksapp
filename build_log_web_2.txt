@@ -1,0 +1,83 @@
+
+> @peaks/web@0.1.0 build
+> next build
+
+  ▲ Next.js 15.0.0
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+ ⨯ ESLint: Cannot find module '/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/eslint-config-next/core-web-vitals' imported from /Users/janschurch/Desktop/Code/Peaksapp/apps/web/eslint.config.mjs Did you mean to import "eslint-config-next/core-web-vitals.js"?
+   Collecting page data ...
+   Generating static pages (0/4) ...
+TypeError: Cannot read properties of null (reading 'useContext')
+    at exports.useContext (/Users/janschurch/Desktop/Code/Peaksapp/node_modules/react/cjs/react.production.min.js:24:495)
+    at StyleRegistry (/Users/janschurch/Desktop/Code/Peaksapp/node_modules/styled-jsx/dist/index/index.js:450:30)
+    at renderWithHooks (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4189:18)
+    at renderElement (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4327:14)
+    at retryNode (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4871:16)
+    at renderNodeDestructive (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4689:7)
+    at renderElement (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4623:11)
+    at retryNode (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4871:16)
+    at renderNodeDestructive (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4689:7)
+    at renderElement (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4623:11)
+
+Error occurred prerendering page "/404". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at exports.useContext (/Users/janschurch/Desktop/Code/Peaksapp/node_modules/react/cjs/react.production.min.js:24:495)
+    at StyleRegistry (/Users/janschurch/Desktop/Code/Peaksapp/node_modules/styled-jsx/dist/index/index.js:450:30)
+    at renderWithHooks (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4189:18)
+    at renderElement (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4327:14)
+    at retryNode (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4871:16)
+    at renderNodeDestructive (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4689:7)
+    at renderElement (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4623:11)
+    at retryNode (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4871:16)
+    at renderNodeDestructive (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4689:7)
+    at renderElement (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4623:11)
+TypeError: Cannot read properties of null (reading 'useContext')
+    at exports.useContext (/Users/janschurch/Desktop/Code/Peaksapp/node_modules/react/cjs/react.production.min.js:24:495)
+    at StyleRegistry (/Users/janschurch/Desktop/Code/Peaksapp/node_modules/styled-jsx/dist/index/index.js:450:30)
+    at renderWithHooks (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4189:18)
+    at renderElement (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4327:14)
+    at retryNode (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4871:16)
+    at renderNodeDestructive (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4689:7)
+    at renderElement (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4623:11)
+    at retryNode (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4871:16)
+    at renderNodeDestructive (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4689:7)
+    at renderElement (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4623:11)
+
+Error occurred prerendering page "/500". Read more: https://nextjs.org/docs/messages/prerender-error
+
+TypeError: Cannot read properties of null (reading 'useContext')
+    at exports.useContext (/Users/janschurch/Desktop/Code/Peaksapp/node_modules/react/cjs/react.production.min.js:24:495)
+    at StyleRegistry (/Users/janschurch/Desktop/Code/Peaksapp/node_modules/styled-jsx/dist/index/index.js:450:30)
+    at renderWithHooks (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4189:18)
+    at renderElement (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4327:14)
+    at retryNode (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4871:16)
+    at renderNodeDestructive (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4689:7)
+    at renderElement (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4623:11)
+    at retryNode (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4871:16)
+    at renderNodeDestructive (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4689:7)
+    at renderElement (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/react-dom/cjs/react-dom-server.edge.production.js:4623:11)
+Failed to build /_error: /404 after 1 attempts.
+Failed to build /_error: /500 after 1 attempts.
+   Generating static pages (1/4) 
+   Generating static pages (2/4) 
+
+> Build error occurred
+Error: Export encountered an error on /_error: /404, exiting the build.
+    at exportPageWithRetry (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/next/dist/export/worker.js:289:31)
+    at async Promise.all (index 0)
+    at async /Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/next/dist/export/worker.js:319:35
+    at async Object.exportPages (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/next/dist/export/worker.js:314:5) {
+  type: 'ExportPageError',
+  code: 'NEXT_EXPORT_PAGE_ERROR'
+}
+npm error Lifecycle script `build` failed with error:
+npm error code 1
+npm error path /Users/janschurch/Desktop/Code/Peaksapp/apps/web
+npm error workspace @peaks/web@0.1.0
+npm error location /Users/janschurch/Desktop/Code/Peaksapp/apps/web
+npm error command failed
+npm error command sh -c next build

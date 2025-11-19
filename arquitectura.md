@@ -4,17 +4,19 @@ Este documento resume el enfoque técnico recomendado para construir la platafor
 
 ## Resumen ejecutivo
 
-- Monorepo TypeScript (Turborepo): `apps/web` (Next.js), `apps/mobile` (Expo), `packages/core` (Drizzle/Zod), `packages/ui`.
-- Datos/Backend: Supabase (Postgres + Auth + Realtime + Storage + Edge Functions). Migraciones con Drizzle controladas en el repo.
-- Web (entrenadores): Next.js 14/15 (App Router, Server Components), Tailwind + shadcn/ui, TanStack Query, Zod.
-- Mobile (atletas y coach on‑the‑go): React Native + Expo (Expo Router, OTA updates, Push), SQLite/WatermelonDB para offline.
-- Media: Cloudflare Stream o Mux para video; Cloudflare R2 como storage principal para imágenes/archivos (Supabase Storage opcional para assets ligeros) con URLs firmadas.
-- Realtime y notificaciones: Supabase Realtime (presencia y cambios); escalar con Ably/Pusher si es necesario.
-- Observabilidad y analítica: Sentry (web/mobile/backend), PostHog (producto), OpenTelemetry → Axiom/Datadog (logs/tracing).
-- Importador con IA: onboarding de planes legacy (Excel/CSV/PDF legibles) con Gemini 2.5 (Flash/Pro) y revisión antes de publicar.
-- Dashboards del entrenador: cumplimiento, cargas (interna/externa), PRs y riesgos (ACWR/monotonía/strain/HRV/sueño).
-- Integraciones salud/wearables: Apple Health, Health Connect (Android), Garmin, Polar, Oura, WHOOP, Samsung, Huawei.
-- Pagos: Stripe Billing (+ Connect si hay marketplace de entrenadores) en v2.
+- **Monorepo TypeScript (Turborepo)**: `apps/web` (Next.js 14), `apps/mobile` (Expo 52), `packages/core` (Drizzle/Zod), `packages/ui` (Shadcn/UI), `packages/config`.
+- **Datos/Backend**: Supabase (Postgres + Auth + Realtime + Storage + Edge Functions). Migraciones con Drizzle controladas en el repo.
+- **Web (entrenadores)**: Next.js 14.2.x (App Router, Server Components, Server Actions), React 18.3.x, Tailwind 3.4.x + Shadcn/UI + Radix UI, TanStack Query (futuro), Zod.
+- **Mobile (atletas)**: React Native 0.76 + Expo 52 (Expo Router 4, OTA updates, Push), React 18.3.x, SQLite/WatermelonDB para offline (futuro).
+- **Design System**: Dark mode premium, Inter font, componentes Shadcn/UI (Button, Input, Card), Glassmorphism, CSS variables con HSL.
+- **Auth**: Supabase Auth con SSR (@supabase/ssr para web, AsyncStorage para mobile), OAuth Google/Apple + Email.
+- **Media**: Cloudflare Stream o Mux para video (futuro); Cloudflare R2 como storage principal para imágenes/archivos (Supabase Storage temporal) con URLs firmadas.
+- **Realtime y notificaciones**: Supabase Realtime (presencia y cambios); escalar con Ably/Pusher si es necesario.
+- **Observabilidad y analítica**: Sentry (web/mobile/backend), PostHog (producto), OpenTelemetry → Axiom/Datadog (logs/tracing).
+- **Importador con IA**: onboarding de planes legacy (Excel/CSV/PDF legibles) con Gemini 2.5 (Flash/Pro) y revisión antes de publicar (futuro).
+- **Dashboards del entrenador**: cumplimiento, cargas (interna/externa), PRs y riesgos (ACWR/monotonía/strain/HRV/sueño) (futuro).
+- **Integraciones salud/wearables**: Apple Health, Health Connect (Android), Garmin, Polar, Oura, WHOOP, Samsung, Huawei (futuro).
+- **Pagos**: Stripe Billing (+ Connect si hay marketplace de entrenadores) en v2 (futuro).
 
 ---
 
@@ -47,6 +49,15 @@ Este documento resume el enfoque técnico recomendado para construir la platafor
 
 ---
 
+## Lenguaje de Diseño y UX (Premium)
+
+- **Estética**: "State of the Art". Interfaz oscura por defecto (OLED friendly), alto contraste, acentos vibrantes (no genéricos).
+- **Interacción**: Feedback háptico en móvil, transiciones fluidas (layout animations) en web y móvil. Nada debe sentirse "estático".
+- **Componentes**: Shadcn/ui altamente personalizado. Bordes sutiles, glassmorphism en capas superiores, tipografía moderna (Inter/Outfit/Satoshi).
+- **Accesibilidad**: Cumplimiento WCAG 2.1 AA mínimo. Focus rings visibles, soporte de lector de pantalla.
+
+---
+
 ## Onboarding e importador con IA (Gemini 2.5)
 
 - Fuentes soportadas: Excel, CSV, Google Sheets exportado y PDFs legibles.
@@ -58,12 +69,19 @@ Este documento resume el enfoque técnico recomendado para construir la platafor
 
 ## Frontend web (entrenadores)
 
-- Next.js 14/15 (App Router + Server Components + Server Actions) para rendimiento y DX.
-- Tailwind + shadcn/ui + Radix para componentes accesibles y consistentes.
-- TanStack Query para data‑fetching y caching; Zustand para estado global ligero.
-- Gráficos: Recharts o Tremor para volúmenes, intensidad, PRs y correlaciones.
-- Autenticación: Supabase Auth (OAuth Google/Apple + email). Sesiones seguras vía cookies.
-- Subidas directas a Cloudflare Stream/S3 con firmas temporales. Previsualizaciones y controles por rol.
+### Stack implementado
+
+- **Framework**: Next.js 14.2.33 (App Router + Server Components + Server Actions) para rendimiento y DX.
+- **React**: 18.3.1 (compatibilidad estable con ecosistema actual).
+- **Styling**: Tailwind CSS 3.4.15 + PostCSS + Autoprefixer.
+- **UI Components**: Shadcn/UI personalizado + Radix UI (primitivos accesibles) - Button, Input, Card implementados.
+- **Tipografía**: Inter (Google Fonts) para profesionalismo y legibilidad.
+- **State Management**: TanStack Query (futuro) para data-fetching y caching; Zustand para estado global ligero (futuro).
+- **Gráficos**: Recharts o Tremor para volúmenes, intensidad, PRs y correlaciones (futuro).
+- **Autenticación**: Supabase Auth con @supabase/ssr (SSR-safe). Server Actions para login/signup. OAuth Google/Apple + email.
+- **Path Aliases**: `@/*` configurado en tsconfig para imports limpios.
+- **ESLint**: eslint-config-next para best practices de Next.js.
+- **Subidas**: Cloudflare Stream/R2 con firmas temporales (futuro). Previsualizaciones y controles por rol.
 
 ### Dashboards del entrenador
 
@@ -81,10 +99,22 @@ Este documento resume el enfoque técnico recomendado para construir la platafor
 
 ## App móvil (atletas y coach on‑the‑go)
 
-- React Native + Expo (Expo Router, OTA updates, Push Notifications).
-- Offline‑first: SQLite/WatermelonDB para cache y cola de operaciones; sincronización al recuperar conexión.
-- Flujo rápido: ver plan del día, loguear sets (reps/peso/tiempo/RPE), comentarios, adjuntos (foto/video), PRs.
-- Deep links y recordatorios configurables por atleta/grupo.
+### Stack implementado
+
+- **Framework**: Expo 52.0.0 (SDK) con Expo Router 4.0.
+- **React Native**: 0.76.0.
+- **React**: 18.3.1 (mismo que web para consistencia).
+- **Routing**: Expo Router para navegación type-safe y file-based.
+- **Autenticación**: Supabase JS Client 2.48.0 + AsyncStorage 1.23.1 para persistencia de sesión.
+- **Styling**: StyleSheet nativo con theme oscuro. Dark mode: `#0B0E14` background, `#1A1D24` cards.
+- **Offline‑first**: WatermelonDB (sobre SQLite) para reactividad y sincronización robusta (futuro).
+  - **Sync Strategy**: "Pull-first" al conectar. Resolución de conflictos automática (Last-Write-Wins) para campos simples, manual para listas complejas.
+- **OTA Updates**: EAS Update para hot fixes sin app store.
+- **Push Notifications**: Expo Notifications (futuro) para recordatorios y sync silenciosa.
+- **TypeScript**: 5.3.3 con strict mode.
+- **Build Script**: TSC para type checking (tsc build).
+- **Flujo rápido**: ver plan del día, loguear sets (reps/peso/tiempo/RPE), comentarios, adjuntos (foto/video), PRs (futuro).
+- **Deep links**: Expo Linking para deep links y recordatorios configurables por atleta/grupo (futuro).
 
 ---
 
@@ -240,6 +270,22 @@ Este documento resume el enfoque técnico recomendado para construir la platafor
 - Realtime a escala → usar Ably/Pusher para fan‑out grande; mantener Realtime para eventos críticos.
 - Reportería pesada → vistas/materialized views y jobs nocturnos; no bloquear lecturas online.
 
+## Calidad y CI/CD
+
+### Build System (Implementado)
+
+- **Turborepo**: Caching y parallel builds configurado en `turbo.json`.
+- **Build Scripts**: Todos los packages tienen `npm run build` (tsc o next build).
+- **Type Safety**: TypeScript 5.x strict mode en todos los packages.
+- **Linting**: ESLint configurado (eslint-config-next para web, base config para packages).
+- **Status**: ✅ Build completo del monorepo pasa exitosamente.
+
+### CI/CD (Futuro)
+
+- **CI**: GitHub Actions. Lint (ESLint), Typecheck (TSC), Unit Tests (Vitest) en cada PR.
+- **CD**: Deploy automático a Vercel (Web) y EAS Update (Mobile - Preview) en merge a main.
+- **E2E**: Playwright para flujos críticos de Web. Maestro para flujos críticos de Mobile.
+
 ## Evolución a escala
 
 - Backend dedicado (Nest/Fastify) para endpoints críticos/webhooks sin cambiar la DB.
@@ -259,13 +305,46 @@ Este documento resume el enfoque técnico recomendado para construir la platafor
 - ¿Idiomas/regiones objetivo y preferencia de hosting?
 - ¿Volumen inicial esperado (coaches/atletas activos)?
 
-## Próximos pasos propuestos
+## Estado actual de implementación (Actualizado 2025-01-19)
 
-1. Inicializar monorepo (Turborepo) con Next.js + Expo y packages `core`, `ui` y `config`.
-2. Definir schema Drizzle (organizations/memberships/workouts/logs) y scripts de migración.
-3. Configurar Supabase (Auth, Storage, Realtime) y escribir políticas RLS base.
-4. Implementar POCs listados (RLS, offline, video, realtime, edge idempotente).
-5. Empezar construcción del MVP con tickets/épicas por módulo.
+### ✅ Completado
+
+1. ✅ **Monorepo inicializado**: Turborepo con Next.js 14 + Expo 52 y packages `core`, `ui` y `config`.
+2. ✅ **Design System**: Dark mode premium, Inter font, CSS variables HSL, componentes Shadcn/UI (Button, Input, Card).
+3. ✅ **Schema Drizzle base**: `users` y `organizations` definidos en `packages/core/src/db/schema.ts`.
+4. ✅ **Supabase Auth integrado**: 
+   - Web: Server Actions con @supabase/ssr, login page con glassmorphism.
+   - Mobile: AsyncStorage persistence, login screen con dark theme.
+5. ✅ **Build System**: Todos los packages buildan exitosamente. TypeScript strict mode.
+6. ✅ **Routing**: Next.js App Router (web), Expo Router (mobile).
+
+### 🔄 En progreso / Próximos pasos
+
+1. **Configurar proyecto Supabase**:
+   - Crear proyecto en supabase.com
+   - Configurar variables de entorno (ver `ENV_EXAMPLE.md`)
+   - Aplicar migraciones Drizzle
+   - Configurar RLS policies
+
+2. **Expandir schema Drizzle**:
+   - Definir `memberships`, `groups`, `exercises`, `workouts`, `sessions`, `set_logs`, etc.
+   - Crear scripts de migración
+   - Configurar Drizzle Kit para push/pull
+
+3. **Implementar POCs críticos**:
+   - RLS multi-tenant con org_id
+   - Offline mobile con WatermelonDB
+   - Video upload a Cloudflare Stream/R2
+   - Realtime para notificaciones
+   - Edge Function idempotente
+
+4. **Desarrollar features MVP** (según `implementation_plan.md`):
+   - Coach: Exercise library, workout templates, assignments, dashboard
+   - Athlete: Today's plan, workout logging, offline sync
+
+5. **CI/CD**:
+   - GitHub Actions para lint/typecheck/test
+   - Deploy automático a Vercel (web) y EAS (mobile)
 
 ---
 

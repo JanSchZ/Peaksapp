@@ -11,12 +11,10 @@
     "test": "turbo test",
     "clean": "turbo clean"
   },
-  "workspaces": {
-    "packages": [
-      "apps/*",
-      "packages/*"
-    ]
-  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "devDependencies": {
     "@peaks/config": "file:packages/config",
     "drizzle-kit": "^0.31.6",

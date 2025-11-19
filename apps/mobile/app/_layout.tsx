@@ -1,22 +1,24 @@
-import { Slot } from "expo-router";
-import { useFonts, Inter_500Medium, Inter_600SemiBold } from "@expo-google-fonts/inter";
-import { SplashScreen } from "expo-router";
-import { useEffect } from "react";
+import { Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { View } from "react-native";
 
-SplashScreen.preventAutoHideAsync();
-
-export default function Layout() {
-  const [fontsLoaded] = useFonts({ Inter_500Medium, Inter_600SemiBold });
-
-  useEffect(() => {
-    if (fontsLoaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
-
-  if (!fontsLoaded) {
-    return null;
-  }
-
-  return <Slot />;
+export default function RootLayout() {
+  return (
+    <View style={{ flex: 1, backgroundColor: "#0B0E14" }}>
+      <StatusBar style="light" />
+      <Stack
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: "#0B0E14",
+          },
+          headerTintColor: "#fff",
+          contentStyle: {
+            backgroundColor: "#0B0E14",
+          },
+        }}
+      >
+        <Stack.Screen name="index" options={{ title: "Peaks" }} />
+      </Stack>
+    </View>
+  );
 }

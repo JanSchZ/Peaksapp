@@ -1,8 +1,10 @@
 {
-  "extends": "@peaks/config/tsconfig",
+  "extends": "@peaks/config/typescript",
   "compilerOptions": {
-    "outDir": "dist"
+    "outDir": "dist",
+    "rootDir": "src"
   },
-  "include": ["src/**/*"],
-  "exclude": ["dist", "node_modules"]
+  "include": [
+    "src"
+  ]
 }

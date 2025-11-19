@@ -1,0 +1,78 @@
+
+> @peaks/web@0.1.0 build
+> next build
+
+  ▲ Next.js 15.0.0
+
+   Creating an optimized production build ...
+
+warn - The `content` option in your Tailwind CSS configuration is missing or empty.
+warn - Configure your content sources or your generated CSS will be missing styles.
+warn - https://tailwindcss.com/docs/content-configuration
+(node:56452) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/janschurch/Desktop/Code/Peaksapp/packages/config/tailwind.config.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /Users/janschurch/Desktop/Code/Peaksapp/packages/config/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+<w> [webpack.cache.PackFileCacheStrategy] Skipped not serializable cache item 'Compilation/modules|/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[2]!/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[3]!/Users/janschurch/Desktop/Code/Peaksapp/packages/ui/src/globals.css': No serializer registered for PostCSSSyntaxError
+<w> while serializing webpack/lib/cache/PackFileCacheStrategy.PackContentItems -> webpack/lib/NormalModule -> webpack/lib/ModuleBuildError -> PostCSSSyntaxError
+Failed to compile.
+
+../../packages/ui/src/globals.css:1:1
+Syntax error: /Users/janschurch/Desktop/Code/Peaksapp/packages/ui/src/globals.css The `border-border` class does not exist. If `border-border` is a custom class, make sure it is defined within a `@layer` directive.
+
+> 1 | @tailwind base;
+    | ^
+  2 | @tailwind components;
+  3 | @tailwind utilities;
+
+../../packages/ui/src/globals.css
+Syntax error: /Users/janschurch/Desktop/Code/Peaksapp/packages/ui/src/globals.css The `border-border` class does not exist. If `border-border` is a custom class, make sure it is defined within a `@layer` directive. (1:1)
+
+> 1 | @tailwind base;
+    | ^
+  2 | @tailwind components;
+  3 | @tailwind utilities;
+
+    at tryRunOrWebpackError (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/next/dist/compiled/webpack/bundle5.js:28:313010)
+    at __webpack_require_module__ (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/next/dist/compiled/webpack/bundle5.js:28:131165)
+    at __nested_webpack_require_153728__ (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/next/dist/compiled/webpack/bundle5.js:28:130607)
+    at /Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/next/dist/compiled/webpack/bundle5.js:28:131454
+    at symbolIterator (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/next/dist/compiled/neo-async/async.js:1:14444)
+    at done (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/next/dist/compiled/neo-async/async.js:1:14824)
+    at Hook.eval [as callAsync] (eval at create (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/next/dist/compiled/webpack/bundle5.js:13:28858), <anonymous>:15:1)
+    at Hook.CALL_ASYNC_DELEGATE [as _callAsync] (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/next/dist/compiled/webpack/bundle5.js:13:26012)
+    at /Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/next/dist/compiled/webpack/bundle5.js:28:130328
+    at symbolIterator (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/next/dist/compiled/neo-async/async.js:1:14402)
+-- inner error --
+Syntax error: /Users/janschurch/Desktop/Code/Peaksapp/packages/ui/src/globals.css The `border-border` class does not exist. If `border-border` is a custom class, make sure it is defined within a `@layer` directive. (1:1)
+
+> 1 | @tailwind base;
+    | ^
+  2 | @tailwind components;
+  3 | @tailwind utilities;
+
+    at Object.<anonymous> (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[2]!/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[3]!/Users/janschurch/Desktop/Code/Peaksapp/packages/ui/src/globals.css:1:7)
+    at /Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/next/dist/compiled/webpack/bundle5.js:28:922602
+    at Hook.eval [as call] (eval at create (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/next/dist/compiled/webpack/bundle5.js:13:28636), <anonymous>:7:1)
+    at Hook.CALL_DELEGATE [as _call] (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/next/dist/compiled/webpack/bundle5.js:13:25906)
+    at /Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/next/dist/compiled/webpack/bundle5.js:28:131198
+    at tryRunOrWebpackError (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/next/dist/compiled/webpack/bundle5.js:28:312964)
+    at __webpack_require_module__ (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/next/dist/compiled/webpack/bundle5.js:28:131165)
+    at __nested_webpack_require_153728__ (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/next/dist/compiled/webpack/bundle5.js:28:130607)
+    at /Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/next/dist/compiled/webpack/bundle5.js:28:131454
+    at symbolIterator (/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/next/dist/compiled/neo-async/async.js:1:14444)
+
+Generated code for /Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[2]!/Users/janschurch/Desktop/Code/Peaksapp/apps/web/node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[3]!/Users/janschurch/Desktop/Code/Peaksapp/packages/ui/src/globals.css
+
+Import trace for requested module:
+../../packages/ui/src/globals.css
+
+
+> Build failed because of webpack errors
+npm error Lifecycle script `build` failed with error:
+npm error code 1
+npm error path /Users/janschurch/Desktop/Code/Peaksapp/apps/web
+npm error workspace @peaks/web@0.1.0
+npm error location /Users/janschurch/Desktop/Code/Peaksapp/apps/web
+npm error command failed
+npm error command sh -c next build
