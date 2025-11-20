@@ -121,50 +121,12 @@ npx expo start --go
 
 ### Expo: "Project is incompatible with this version of Expo Go"
 
-**Síntoma**: 
-```
-• The installed version of Expo Go is for SDK 54.
-• The project you opened uses SDK 52.
-```
+**Nota**: El proyecto ha sido actualizado a **SDK 54** para compatibilidad con la última versión de Expo Go.
 
-**Causa**: Tu dispositivo tiene Expo Go para SDK 54, pero el proyecto usa SDK 52.
+Si encuentras problemas de versión:
 
-**Soluciones**:
-
-**Opción A: Actualizar el proyecto a SDK 54 (Recomendado para nuevos proyectos)**
-
-```bash
-cd apps/mobile
-
-# Actualizar dependencias de Expo
-npm install expo@~54.0.0 --legacy-peer-deps
-npm install expo-router@~5.0.0 --legacy-peer-deps
-
-# Actualizar React Native
-npm install react-native@0.76.9 --legacy-peer-deps
-npm install react-native-screens@~4.4.0 --legacy-peer-deps
-
-# Actualizar app.config.ts
-# Cambiar sdkVersion a "54.0.0"
-```
-
-**Opción B: Instalar Expo Go compatible con SDK 52**
-
-1. Desinstala Expo Go actual de tu dispositivo
-2. Descarga Expo Go para SDK 52:
-   - **Android**: https://expo.dev/go?sdkVersion=52&platform=android&device=true
-   - **iOS**: https://expo.dev/go?sdkVersion=52&platform=ios&device=true
-
-**Opción C: Usar Web o Emulador (Sin Expo Go)**
-
-```bash
-# Usar web browser (más fácil para desarrollo)
-npx expo start --web
-
-# O usar emulador nativo
-npx expo start --ios      # iOS Simulator
-npx expo start --android  # Android Emulator
-```
+1. Asegúrate de tener la última versión de Expo Go en tu dispositivo.
+2. Si necesitas usar una versión anterior (SDK 52), puedes hacer downgrade en `apps/mobile/package.json`.
 
 ### Expo: Asset warnings (splash.png, icon.png)
 

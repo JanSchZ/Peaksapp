@@ -101,8 +101,8 @@ Este documento resume el enfoque técnico recomendado para construir la platafor
 
 ### Stack implementado
 
-- **Framework**: Expo 52.0.0 (SDK) con Expo Router 4.0.
-- **React Native**: 0.76.0.
+- **Framework**: Expo 54.0.0 (SDK) con Expo Router 5.0.
+- **React Native**: 0.76.1.
 - **React**: 18.3.1 (mismo que web para consistencia).
 - **Routing**: Expo Router para navegación type-safe y file-based.
 - **Autenticación**: Supabase JS Client 2.48.0 + AsyncStorage 1.23.1 para persistencia de sesión.
@@ -296,6 +296,39 @@ Este documento resume el enfoque técnico recomendado para construir la platafor
 ## Costos iniciales aproximados
 
 - Vercel (web), Supabase Pro (DB/Auth/Storage), Cloudflare Stream, Sentry/PostHog: ~80–200 USD/mes en MVP; escala con uso.
+
+## Infraestructura de Producción
+
+### ¿Por qué Supabase para Producción?
+
+Supabase es una plataforma "Backend-as-a-Service" construida sobre estándares abiertos (Postgres) que escala desde MVP hasta millones de usuarios.
+
+- **Escalabilidad**: Postgres es el estándar de oro. Supabase permite escalar verticalmente (más RAM/CPU) y horizontalmente (Read Replicas) con un clic.
+- **Seguridad**: Certificaciones SOC2, HIPAA (en planes Enterprise). Encriptación en reposo y en tránsito.
+- **Backups**:
+  - **Automáticos**: Diarios (retención según plan).
+  - **PITR (Point-in-Time Recovery)**: Recuperación a cualquier segundo específico (recomendado para PROD).
+
+### Checklist de Configuración para Producción
+
+1.  **Base de Datos**:
+    - [ ] Activar **Point-in-Time Recovery (PITR)** (Add-on en Supabase).
+    - [ ] Configurar **Branching** (opcional pero recomendado): `main` (prod) y `dev` (preview).
+    - [ ] Índices adecuados en columnas de filtrado frecuente (`org_id`, `user_id`, fechas).
+
+2.  **Seguridad (RLS)**:
+    - [ ] **RLS habilitado** en TODAS las tablas públicas.
+    - [ ] Políticas de "Deny by default" (nadie accede si no hay política explícita).
+    - [ ] Auditoría de políticas con `pg_tap` o tests de integración.
+
+3.  **Autenticación**:
+    - [ ] Configurar **SMTP propio** (AWS SES, Resend, SendGrid) para emails transaccionales (no usar el default de Supabase en prod).
+    - [ ] Habilitar **MFA (Multi-Factor Authentication)** para administradores/coaches.
+    - [ ] Configurar dominios personalizados para Auth y API (ej: `auth.peaks.app`).
+
+4.  **Performance**:
+    - [ ] Habilitar **pg_stat_statements** para monitorear queries lentas.
+    - [ ] Configurar **CDN** para Storage (integrado en Supabase/Cloudflare).
 
 ## Preguntas para alinear
 

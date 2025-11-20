@@ -1,6 +1,6 @@
 import { login, signup } from "./actions";
 import { Button } from "@peaks/ui";
-import { Input } from "@peaks/ui";
+import { Input, PasswordInput } from "@peaks/ui";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@peaks/ui";
 
 export default function LoginPage() {
@@ -28,10 +28,9 @@ export default function LoginPage() {
                             />
                         </div>
                         <div className="space-y-2">
-                            <Input
+                            <PasswordInput
                                 id="password"
                                 name="password"
-                                type="password"
                                 placeholder="••••••••"
                                 required
                                 className="bg-background/50"

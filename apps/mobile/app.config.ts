@@ -6,25 +6,25 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     slug: "peaks",
     version: "1.0.0",
     orientation: "portrait",
-    icon: "./assets/icon.png",
+    // icon: "./assets/icon.png",
     userInterfaceStyle: "dark",
-    splash: {
+    /* splash: {
         image: "./assets/splash.png",
         resizeMode: "contain",
         backgroundColor: "#0B0E14",
-    },
+    }, */
     assetBundlePatterns: ["**/*"],
     ios: {
         supportsTablet: true,
     },
     android: {
-        adaptiveIcon: {
+        /* adaptiveIcon: {
             foregroundImage: "./assets/adaptive-icon.png",
             backgroundColor: "#0B0E14",
-        },
+        }, */
     },
     web: {
-        favicon: "./assets/favicon.png",
+        // favicon: "./assets/favicon.png",
         bundler: "metro",
     },
     plugins: ["expo-router"],
