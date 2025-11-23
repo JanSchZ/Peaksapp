@@ -8,19 +8,27 @@ import { v4 as uuidv4 } from 'uuid';
 
 // Note: In a real app, we'd use a shared DB connection instance
 // For now, we'll create a connection per action for simplicity in MVP
-const connectionString = process.env.DATABASE_URL!;
-const client = postgres(connectionString);
-const db = drizzle(client);
 
 export async function saveSeasonPlan(data: any) {
-    // 1. Validate User
-    // In a real server action, we'd use Supabase Auth to get the user ID
-    // const supabase = createClient();
-    // const { data: { user } } = await supabase.auth.getUser();
-    // if (!user) throw new Error('Unauthorized');
+    const connectionString = process.env.DATABASE_URL;
+    if (!connectionString) {
+        console.error('DATABASE_URL is not set');
+        return { success: false, error: 'Server configuration error' };
+    }
 
-    // Mock User ID for MVP (Replace with real Auth ID later)
-    const userId = '00000000-0000-0000-0000-000000000000';
+    const client = postgres(connectionString);
+    const db = drizzle(client);
+
+    // 1. Validate User
+    const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+        console.error('User not authenticated');
+        return { success: false, error: 'Unauthorized' };
+    }
+
+    const userId = user.id;
 
     try {
         // 2. Create Season

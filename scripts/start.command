@@ -26,8 +26,8 @@ if [[ "${OSTYPE:-}" != darwin* ]]; then
   exit 0
 fi
 
-run_in_terminal "Web" "cd apps/web && npm run dev"
-run_in_terminal "Expo" "cd apps/mobile && npx expo start"
+run_in_terminal "Web" "npm run dev --workspace=@peaks/web"
+run_in_terminal "Expo" "npm run start --workspace=@peaks/mobile"
 
 BACKEND_SCRIPT="cd apps/backend && npm run dev"
 if [[ ! -d "$ROOT_DIR/apps/backend" ]]; then

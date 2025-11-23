@@ -1,6 +1,22 @@
 {
-  "extends": "expo/tsconfig.base",
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "strict": true
+    "strict": true,
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@peaks/core": [
+        "../../packages/core/src/index.ts"
+      ],
+      "@peaks/core/*": [
+        "../../packages/core/src/*"
+      ],
+      "@peaks/ui": [
+        "../../packages/ui/src/index.ts"
+      ],
+      "@peaks/ui/*": [
+        "../../packages/ui/src/*"
+      ]
+    }
   }
 }

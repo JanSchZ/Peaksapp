@@ -20,10 +20,10 @@ command -v npm >/dev/null 2>&1 || { echo "[setup] npm is required." >&2; exit 1;
 command -v npx >/dev/null 2>&1 || { echo "[setup] npx (npm >= 5.2) is required." >&2; exit 1; }
 
 echo "[setup] Installing workspace deps..."
-npm install --legacy-peer-deps
+npm install
 
 echo "[setup] Fixing ajv version conflict for Expo..."
-npm install ajv@^8.17.1 --save-dev --legacy-peer-deps
+npm install ajv@^8.17.1 --save-dev --workspace=@peaks/mobile
 
 echo "[setup] Checking Expo workspace dependencies..."
 # expo doctor command renamed to expo-doctor. Skip dependency validation because React/Web already shares the root tree.

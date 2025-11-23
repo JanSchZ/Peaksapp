@@ -1,8 +1,13 @@
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, ActivityIndicator } from 'react-native';
 import { Colors } from '../../constants/Colors';
-import { Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
+import { useTodaysWorkout } from '../../hooks/useTodaysWorkout';
+import { WorkoutCard } from '../../components/WorkoutCard';
 
 export default function Dashboard() {
+    const { data: workout, isLoading } = useTodaysWorkout();
+    const router = useRouter();
+
     return (
         <SafeAreaView style={styles.container}>
             <Stack.Screen options={{ headerShown: false }} />
@@ -14,17 +19,19 @@ export default function Dashboard() {
 
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Today's Workout</Text>
-                    <TouchableOpacity style={styles.card}>
-                        <View style={styles.cardHeader}>
-                            <Text style={styles.cardTitle}>Lower Body Power</Text>
-                            <View style={styles.badge}>
-                                <Text style={styles.badgeText}>60 MIN</Text>
-                            </View>
-                        </View>
-                        <Text style={styles.cardDescription}>Squat Focus • Week 3</Text>
-                        <View style={styles.separator} />
-                        <Text style={styles.cardFooter}>Tap to start session</Text>
-                    </TouchableOpacity>
+                    {isLoading ? (
+                        <ActivityIndicator color={Colors.dark.primary} />
+                    ) : workout ? (
+                        <WorkoutCard
+                            title={workout.title}
+                            duration={workout.duration}
+                            focus={workout.focus}
+                            week={workout.week}
+                            onPress={() => router.push(`/workout/${workout.id}`)}
+                        />
+                    ) : (
+                        <Text style={styles.emptyText}>No workout scheduled for today.</Text>
+                    )}
                 </View>
 
                 <View style={styles.section}>
@@ -78,49 +85,9 @@ const styles = StyleSheet.create({
         color: Colors.dark.text,
         marginBottom: 16,
     },
-    card: {
-        backgroundColor: Colors.dark.card,
-        borderRadius: 16,
-        padding: 20,
-        borderWidth: 1,
-        borderColor: Colors.dark.border,
-    },
-    cardHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 8,
-    },
-    cardTitle: {
-        fontSize: 20,
-        fontWeight: '700',
-        color: Colors.dark.text,
-    },
-    cardDescription: {
-        fontSize: 14,
+    emptyText: {
         color: Colors.dark.mutedForeground,
-    },
-    badge: {
-        backgroundColor: Colors.dark.accent,
-        paddingHorizontal: 8,
-        paddingVertical: 4,
-        borderRadius: 6,
-    },
-    badgeText: {
-        color: Colors.dark.text,
-        fontSize: 12,
-        fontWeight: '600',
-    },
-    separator: {
-        height: 1,
-        backgroundColor: Colors.dark.border,
-        marginVertical: 16,
-    },
-    cardFooter: {
-        color: Colors.dark.primary,
-        fontSize: 14,
-        fontWeight: '600',
-        textAlign: 'center',
+        fontStyle: 'italic',
     },
     statsGrid: {
         flexDirection: 'row',

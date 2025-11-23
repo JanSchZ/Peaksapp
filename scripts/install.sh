@@ -12,11 +12,11 @@ if [ ! -f "package.json" ]; then
 fi
 
 echo "📦 Step 1: Installing dependencies..."
-npm install --legacy-peer-deps
+npm install
 
 echo ""
-echo "🔧 Step 2: Fixing ajv version conflict for Expo..."
-npm install ajv@^8.17.1 --save-dev --legacy-peer-deps
+echo "🔧 Step 2: Ensuring Expo dependencies..."
+npm install ajv@^8.17.1 --save-dev --workspace=@peaks/mobile
 
 echo ""
 echo "✅ Installation complete!"

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Alert, StyleSheet, View, TextInput, Text, TouchableOpacity, SafeAreaView, StatusBar } from 'react-native';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../lib/supabase';
 import { router } from 'expo-router';
-import { Colors } from '../../constants/Colors';
+import { Colors } from '../constants/Colors';
 
 export default function Auth() {
     const [email, setEmail] = useState('');
@@ -62,6 +62,13 @@ export default function Auth() {
                         disabled={loading}
                     >
                         <Text style={styles.buttonText}>{loading ? 'Signing in...' : 'Sign In'}</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={styles.secondaryButton}
+                        onPress={() => router.push('/coach/dashboard')}
+                    >
+                        <Text style={styles.secondaryButtonText}>Demo: Coach Mode</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -129,5 +136,14 @@ const styles = StyleSheet.create({
         color: Colors.dark.primaryForeground,
         fontSize: 16,
         fontWeight: '600',
+    },
+    secondaryButton: {
+        padding: 16,
+        alignItems: 'center',
+    },
+    secondaryButtonText: {
+        color: Colors.dark.mutedForeground,
+        fontSize: 14,
+        fontWeight: '500',
     },
 });
