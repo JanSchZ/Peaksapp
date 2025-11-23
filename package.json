@@ -9,7 +9,10 @@
     "build": "turbo build",
     "lint": "turbo lint",
     "test": "turbo test",
-    "clean": "turbo clean"
+    "clean": "turbo clean",
+    "db:generate": "turbo run generate --filter=@peaks/core",
+    "db:migrate": "turbo run migrate --filter=@peaks/core",
+    "db:push": "turbo run push --filter=@peaks/core"
   },
   "workspaces": [
     "apps/*",
