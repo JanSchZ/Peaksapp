@@ -6,13 +6,13 @@ Congratulations! Your Peaksapp monorepo is now fully set up with a **state-of-th
 
 ### ✅ Monorepo Structure (Turborepo)
 - **`apps/web`**: Next.js 14 web application (Coach Dashboard)
-- **`apps/mobile`**: Expo 52 mobile application (Athlete Experience)
+- **`apps/mobile`**: Expo 52 mobile application (Single App: Athlete Mode + Coach Mode)
 - **`packages/ui`**: Shared UI component library with Shadcn/UI components
 - **`packages/core`**: Shared business logic and database schemas (Drizzle ORM)
 - **`packages/config`**: Shared configuration (TypeScript, ESLint, Tailwind)
 
 ### ✅ Premium Design System
-- **Dark Mode Theme**: Premium dark color palette with HSL variables
+- **Dark Mode First**: Premium dark color palette with HSL variables
 - **Typography**: Inter font family for professional aesthetics
 - **Components**: Button, Input, and Card components following Shadcn/UI patterns
 - **Tailwind CSS**: Fully configured with custom theme and utilities
@@ -115,18 +115,21 @@ ALTER TABLE organizations ENABLE ROW LEVEL SECURITY;
 
 Based on your `implementation_plan.md`, the next features to implement are:
 
-**For Web (Coach Dashboard):**
+**For Web (Coach Command Center):**
 - [ ] Coach onboarding flow
-- [ ] Dashboard overview with stats
+- [ ] **Periodization Engine**: Macro/Meso/Microcycle planning with Gantt view
+- [ ] **Exercise Builder**: Create exercises, upload videos, tag metadata
+- [ ] **Workout Designer**: Drag & drop builder for complex sessions
+- [ ] **Proactive AI**: Plan auditing and volume violation alerts
+- [ ] Dashboard overview with Advanced Metrics (ACWR, Monotony)
 - [ ] Calendar view for planning
-- [ ] Exercise library management
 - [ ] Athlete management (invite, assign workouts)
+- [ ] **AI Import**: Import legacy Excel/PDF plans with Gemini 2.5
 
-**For Mobile (Athlete Experience):**
-- [ ] Today's workout plan view
-- [ ] Interactive workout mode
-- [ ] Exercise logging with timer
-- [ ] Post-workout feedback
+**For Mobile (Universal App):**
+- [ ] **Coach Mode**: View groups, quick edit, athlete logs
+- [ ] **Athlete Mode**: Interactive workout, timer, RPE logging
+- [ ] **Journaling**: Post-workout notes with Gemini 3.0 Pro analysis
 - [ ] Offline sync with WatermelonDB
 
 ---
@@ -140,11 +143,17 @@ Based on your `implementation_plan.md`, the next features to implement are:
 
 ---
 
-## 🎨 Design Philosophy
+## 🎨 Design Philosophy & Vision
 
-This implementation follows your "Premium" aesthetic requirements:
+**Peaksapp is the Operating System for High Performance.**
 
-- **Dark Mode First**: Sophisticated color palette with high contrast
+- **Long-Term Vision**: We manage **Seasons**, not just sessions. Full periodization support (Macro/Meso/Micro).
+- **Proactive Intelligence**: The AI audits your plan *before* you assign it, warning of injury risks or poor tapering.
+- **Coach as Architect**: Powerful tools to create exercises, upload media, and design workouts manually.
+- **Coach as CEO**: The coach has a "Command Center" to manage 50+ athletes without burnout.
+- **Science-Based**: We don't just log weights; we calculate **ACWR**, **Strain**, and **Readiness**.
+- **AI-Powered**: Gemini 3.0 Pro analyzes athlete journals to detect burnout before it happens.
+- **Premium Aesthetic**: Dark Mode First, Glassmorphism, and smooth animations.
 - **Modern Components**: Shadcn/UI patterns with Radix UI primitives
 - **Smooth Animations**: Ready for Framer Motion (web) and Reanimated (mobile)
 - **Glassmorphism**: Backdrop blur effects on cards
@@ -155,8 +164,8 @@ This implementation follows your "Premium" aesthetic requirements:
 ## 🏗️ Architecture Highlights
 
 1. **TypeScript Everywhere**: Full type safety from database to UI
-2. **Monorepo Benefits**: Shared code, consistent tooling, optimized builds
-3. **Offline-First Mobile**: Ready for WatermelonDB integration
+2. **Pragmatic Offline**: TanStack Query for robust caching and offline tolerance
+3. **Monorepo Benefits**: Shared code, consistent tooling, optimized builds
 4. **Server Components**: Next.js App Router with Server Actions
 5. **Edge-Ready**: Supabase Edge Functions for backend logic
 

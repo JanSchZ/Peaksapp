@@ -6,15 +6,17 @@ Este documento resume el enfoque técnico recomendado para construir la platafor
 
 - **Monorepo TypeScript (Turborepo)**: `apps/web` (Next.js 14), `apps/mobile` (Expo 52), `packages/core` (Drizzle/Zod), `packages/ui` (Shadcn/UI), `packages/config`.
 - **Datos/Backend**: Supabase (Postgres + Auth + Realtime + Storage + Edge Functions). Migraciones con Drizzle controladas en el repo.
-- **Web (entrenadores)**: Next.js 14.2.x (App Router, Server Components, Server Actions), React 18.3.x, Tailwind 3.4.x + Shadcn/UI + Radix UI, TanStack Query (futuro), Zod.
-- **Mobile (atletas)**: React Native 0.76 + Expo 52 (Expo Router 4, OTA updates, Push), React 18.3.x, SQLite/WatermelonDB para offline (futuro).
+- **Web (entrenadores)**: Next.js 14.2.x (App Router), React 18.3.x, **Zustand** (Estado Global), **TanStack Query** (Data Fetching), **Recharts** (Gráficos), **@dnd-kit** (Drag & Drop).
+- **Mobile (atletas y entrenadores)**: React Native 0.76 + Expo 52. **TanStack Query + AsyncStorage** (Offline-Tolerant). **Victory Native** (Gráficos). **FlashList** (Listas rápidas).
 - **Design System**: Dark mode premium, Inter font, componentes Shadcn/UI (Button, Input, Card), Glassmorphism, CSS variables con HSL.
 - **Auth**: Supabase Auth con SSR (@supabase/ssr para web, AsyncStorage para mobile), OAuth Google/Apple + Email.
 - **Media**: Cloudflare Stream o Mux para video (futuro); Cloudflare R2 como storage principal para imágenes/archivos (Supabase Storage temporal) con URLs firmadas.
 - **Realtime y notificaciones**: Supabase Realtime (presencia y cambios); escalar con Ably/Pusher si es necesario.
 - **Observabilidad y analítica**: Sentry (web/mobile/backend), PostHog (producto), OpenTelemetry → Axiom/Datadog (logs/tracing).
-- **Importador con IA**: onboarding de planes legacy (Excel/CSV/PDF legibles) con Gemini 2.5 (Flash/Pro) y revisión antes de publicar (futuro).
-- **Dashboards del entrenador**: cumplimiento, cargas (interna/externa), PRs y riesgos (ACWR/monotonía/strain/HRV/sueño) (futuro).
+- **Importador con IA**: onboarding de planes legacy (Excel/CSV/PDF legibles) con Gemini 2.5 (Flash/Pro) y revisión antes de publicar.
+- **Inteligencia Predictiva y Journaling (Gemini 3.0 Pro)**: Análisis de "Journal" del atleta/entrenador y generación de resúmenes semanales con insights profundos (patrones de fatiga, adherencia, psicología).
+- **Métricas de Carga Avanzadas**: Motor de cálculo para ACWR (Acute:Chronic Workload Ratio), Monotonía, Strain, TRIMP y variabilidad.
+- **Dashboards del entrenador**: cumplimiento, cargas (interna/externa), PRs y riesgos (ACWR/monotonía/strain/HRV/sueño).
 - **Integraciones salud/wearables**: Apple Health, Health Connect (Android), Garmin, Polar, Oura, WHOOP, Samsung, Huawei (futuro).
 - **Pagos**: Stripe Billing (+ Connect si hay marketplace de entrenadores) en v2 (futuro).
 
@@ -22,11 +24,14 @@ Este documento resume el enfoque técnico recomendado para construir la platafor
 
 ## Propuesta de valor y objetivos
 
+- **Coach como Arquitecto**: Herramientas robustas para crear ejercicios, subir videos propios, diseñar sesiones complejas y organizar librerías. Control manual total.
+- **Inteligencia Aumentada**: La IA no reemplaza al coach, lo potencia. Se encarga de lo que el humano no puede ver: tendencias ocultas, análisis de texto masivo y cálculos complejos.
 - Ser la interfaz principal del entrenador para planificar, asignar, comunicar y medir en un solo lugar.
 - Reemplazar Excel/Sheets/PDF/chats con flujos nativos rápidos, auditables y multi‑tenant.
 - Onboarding sin fricción de planes existentes mediante importador con IA (Gemini 2.5) y vista de revisión.
-- App móvil con registro rápido y offline real; sincronización robusta y feedback en contexto (texto/video).
-- Dashboards accionables que combinan ejecución, PRs y señales de wearables para decidir ajustes hoy.
+- **Ecosistema Unificado (Single App)**: El entrenador tiene su "oficina" en la Web, pero lleva su "portapapeles inteligente" en el bolsillo (App Móvil en Modo Coach) para gestionar in-situ.
+- **Ciencia de Datos Aplicada**: Métricas de carga reales (ACWR, Strain) y predicción de riesgos, no solo "kilos levantados".
+- **Journaling Inteligente**: El atleta escribe notas libres; Gemini 3.0 Pro las analiza para detectar estados de ánimo, dolor oculto o patrones de conducta, generando resúmenes ejecutivos para el coach.
 
 ## Arquitectura base
 
@@ -37,8 +42,8 @@ Este documento resume el enfoque técnico recomendado para construir la platafor
 ```txt
 .
 ├─ apps/
-│  ├─ web/            # Next.js (panel entrenadores, admin)
-│  └─ mobile/         # Expo (app atletas y coach on-the-go)
+│  ├─ web/            # Next.js (panel principal entrenadores, admin)
+│  └─ mobile/         # Expo (Single App: Atleta + Coach Mode)
 ├─ packages/
 │  ├─ core/           # Drizzle schema, Zod, lógica de dominio, SDKs cliente
 │  ├─ ui/             # Componentes compartidos (Tamagui/shadcn adaptado)
@@ -67,6 +72,21 @@ Este documento resume el enfoque técnico recomendado para construir la platafor
 - Revisión antes de publicar: estado “borrador” con comparativa original → estandarizado; edición en bloque; aceptación total o por partes.
 - Versionado y auditoría: importaciones trazables; equivalencias persistidas para acelerar futuros imports.
 
+## Inteligencia Artificial Avanzada (Gemini 3.0 Pro)
+
+### Journaling y Resúmenes Semanales
+- **Input**: Notas de texto libre del atleta post-entreno, comentarios en ejercicios, feedback de video.
+- **Procesamiento (Gemini 3.0 Pro)**:
+  - Análisis de sentimiento y palabras clave (dolor, estrés, sueño, motivación).
+  - Correlación con métricas duras (RPE, Carga).
+- **Output**:
+  - **Resumen Semanal Ejecutivo**: "Juan completó el 90% del volumen, pero reporta molestia en rodilla en 3 sesiones consecutivas y su RPE promedio subió un 15%. Riesgo de sobreentrenamiento detectado."
+  - **Sugerencias de Ajuste**: "Considerar descarga de volumen en patrón de sentadilla para la próxima semana."
+
+### Predicción y Patrones
+- Detección de estancamiento basada en historial de cargas vs. rendimiento.
+- Alertas de "Burnout" psicológico basadas en el tono del Journal.
+
 ## Frontend web (entrenadores)
 
 ### Stack implementado
@@ -76,8 +96,9 @@ Este documento resume el enfoque técnico recomendado para construir la platafor
 - **Styling**: Tailwind CSS 3.4.15 + PostCSS + Autoprefixer.
 - **UI Components**: Shadcn/UI personalizado + Radix UI (primitivos accesibles) - Button, Input, Card implementados.
 - **Tipografía**: Inter (Google Fonts) para profesionalismo y legibilidad.
-- **State Management**: TanStack Query (futuro) para data-fetching y caching; Zustand para estado global ligero (futuro).
-- **Gráficos**: Recharts o Tremor para volúmenes, intensidad, PRs y correlaciones (futuro).
+- **State Management**: **Zustand** para estado complejo de UI (Planificador) y **TanStack Query** para estado de servidor (Caché, Revalidación).
+- **Gráficos**: **Recharts** para visualización de datos (ACWR, Volumen) con personalización CSS.
+- **Interacción**: **@dnd-kit** para drag-and-drop accesible en el planificador.
 - **Autenticación**: Supabase Auth con @supabase/ssr (SSR-safe). Server Actions para login/signup. OAuth Google/Apple + email.
 - **Path Aliases**: `@/*` configurado en tsconfig para imports limpios.
 - **ESLint**: eslint-config-next para best practices de Next.js.
@@ -90,6 +111,50 @@ Este documento resume el enfoque técnico recomendado para construir la platafor
 - Drill‑down por atleta: línea de tiempo que cruza sesiones, métricas fisiológicas, PRs y feedback; comparativa plan vs. ejecución.
 - Herramientas de planificación: mapas de calor de adherencia y estancamientos; filtros por bloque/ciclo, patrón de movimiento y grupo muscular.
 
+### Herramientas de Creación (Coach Tools)
+El entrenador tiene control granular absoluto sobre su librería y programación.
+
+- **Exercise Builder**:
+  - Creación manual de ejercicios con campos personalizados.
+  - **Media Management**: Subida directa de videos (desde móvil/web) o enlaces a YouTube/Vimeo. Asignación de thumbnails.
+  - Etiquetado profundo: Grupo muscular, patrón de movimiento, equipamiento, dificultad.
+- **Workout Designer**:
+  - Interfaz "Drag & Drop" para construir sesiones.
+  - Creación de bloques, superseries, circuitos y AMRAPs.
+  - Definición precisa de variables: RPE, %1RM, Tempo, Descanso, Notas técnicas.
+- **Librería de Contenido**:
+  - Gestión de plantillas de sesiones y microciclos.
+  - Clonación y modificación rápida de planes existentes.
+
+## Motor de Periodización (Long-Term Athlete Development)
+
+El corazón del sistema no es la sesión, es la **Temporada**.
+
+### Jerarquía de Planificación
+1.  **Temporada (Season)**: Objetivo anual (ej: "Juegos Olímpicos 2026").
+2.  **Macrociclo**: Grandes fases (Preparación General, Específica, Competitiva, Transición).
+3.  **Mesociclo (Bloque)**: 4-6 semanas con un objetivo fisiológico concreto (Hipertrofia, Fuerza Máxima, Potencia, Taper).
+4.  **Microciclo (Semana)**: La unidad organizativa básica.
+5.  **Sesión**: El entrenamiento diario.
+
+### Herramientas Visuales (Visual Planning)
+- **Timeline View (Gantt)**:
+  - Visualización anual/semestral.
+  - **Color-Coding**: Bloques coloreados por cualidad física (Fuerza=Azul, Metabólico=Rojo, Técnica=Verde).
+  - **Drag & Drop**: Mover bloques completos de semanas. Si mueves un Mesociclo, los siguientes se ajustan automáticamente.
+- **Load Management Dashboard**:
+  - Gráfico de volumen/intensidad planificado vs. realizado a nivel de Macrociclo.
+
+### Inteligencia Proactiva (The "Assistant Head Coach")
+La IA no solo mira el pasado, **audita el futuro**.
+
+- **Plan Auditing (Auditoría de Planificación)**:
+  - Al crear un plan, Gemini 3.0 analiza la estructura:
+    - *"Alerta: Has programado un bloque de Potencia (Alta Intensidad) inmediatamente después de vacaciones (Desentrenamiento). Riesgo de lesión."*
+    - *"Sugerencia: El volumen del Mesociclo 3 aumenta un 40% vs el Mesociclo 2. Viola la regla del 10%. Sugiero insertar semana de descarga."*
+- **Tapering Automático**:
+  - *"Se acerca la competición principal. ¿Quieres que genere una propuesta de Tapering (reducción exponencial de volumen) para las próximas 2 semanas?"*
+
 ### Configurabilidad de gráficos
 
 - Personalización: mostrar/ocultar widgets, reordenar y redimensionar; vistas guardadas por coach/organización; compartir tableros como plantillas; permisos por rol para editar.
@@ -97,7 +162,16 @@ Este documento resume el enfoque técnico recomendado para construir la platafor
 - Correlaciones: explorador con scatter/heatmap de correlación; selección de métricas y ventanas temporales; segmentación por grupo/deporte; líneas de tendencia/regresión; exportación CSV/PNG.
 - Cross‑filter y zoom: brush temporal que sincroniza paneles, filtros por equipo/grupo/etiquetas/deporte, y persistencia de filtros en URL para compartir estado.
 
-## App móvil (atletas y coach on‑the‑go)
+## App móvil (Single App: Atleta + Coach Mode)
+
+### Estrategia Single App
+Hemos decidido unificar la experiencia en una sola base de código (`apps/mobile`) para maximizar la velocidad de desarrollo y consistencia.
+- **Role-Based UI**: La app detecta el rol (`coach` o `athlete`) al iniciar sesión.
+  - **Modo Atleta**: Foco en ejecución, logueo rápido, timer, feedback.
+  - **Modo Coach**:
+    - **Gestión On-the-Go**: Crear/editar ejercicios y sesiones desde el móvil.
+    - **Captura de Media**: Grabar y subir videos de técnica directamente a la librería del atleta o ejercicio.
+    - **Live Dashboard**: Ver quién está entrenando ahora y sus métricas en tiempo real.
 
 ### Stack implementado
 
@@ -107,8 +181,9 @@ Este documento resume el enfoque técnico recomendado para construir la platafor
 - **Routing**: Expo Router para navegación type-safe y file-based.
 - **Autenticación**: Supabase JS Client 2.48.0 + AsyncStorage 1.23.1 para persistencia de sesión.
 - **Styling**: StyleSheet nativo con theme oscuro. Dark mode: `#0B0E14` background, `#1A1D24` cards.
-- **Offline‑first**: WatermelonDB (sobre SQLite) para reactividad y sincronización robusta (futuro).
-  - **Sync Strategy**: "Pull-first" al conectar. Resolución de conflictos automática (Last-Write-Wins) para campos simples, manual para listas complejas.
+- **Offline-Tolerant**: **TanStack Query** con persistencia. La app funciona sin red (lectura de caché) y encola mutaciones simples en AsyncStorage. No usamos WatermelonDB para reducir complejidad inicial.
+- **Listas**: **FlashList** (Shopify) para rendimiento superior en listas largas (historial, ejercicios).
+- **Gráficos Móvil**: **Victory Native** o **Gifted Charts**.
 - **OTA Updates**: EAS Update para hot fixes sin app store.
 - **Push Notifications**: Expo Notifications (futuro) para recordatorios y sync silenciosa.
 - **TypeScript**: 5.3.3 con strict mode.
@@ -148,7 +223,14 @@ Este documento resume el enfoque técnico recomendado para construir la platafor
 - Columna `org_id` en todas las tablas de dominio.
 - JWT con claims firmados: `org_id`, `role` (coach/athlete/assistant/admin).
 - Políticas RLS por fila y por rol (lectura/escritura, owner vs. miembro).
+- Políticas RLS por fila y por rol (lectura/escritura, owner vs. miembro).
 - Edge tests para validar políticas (matrix de permisos por tabla/rol).
+
+### Reglas de Oro de Datos (Data Integrity)
+1.  **Soft Deletes**: NUNCA borrar filas físicamente. Todas las tablas clave (`exercises`, `workouts`, `users`) tienen columna `deleted_at`.
+2.  **UTC Everywhere**: Todas las fechas se guardan en UTC (`timestamptz`). Solo se convierten a local en el momento de renderizar.
+3.  **Inmutabilidad Histórica**: Separación estricta entre `planned_workouts` (plantillas mutables) y `performed_sessions` (logs inmutables). Al completar una sesión, se copian los datos, no se referencian.
+4.  **IDs en Cliente**: Generar UUIDs en el frontend para permitir "Optimistic Updates" sin esperar a la DB.
 
 ---
 
@@ -194,13 +276,28 @@ Este documento resume el enfoque técnico recomendado para construir la platafor
 
 ---
 
-## Cálculo de cargas, PRs y riesgos
+## Cálculo de cargas, PRs y riesgos (Science Engine)
 
-- Carga interna: sRPE×duración, TRIMP (Banister/Lucía); ventanas semanales y por bloque.
-- Carga externa: tonelaje/volumen por patrón de movimiento; ritmo/potencia/distancia para cíclicos; zonas de FC/potencia.
-- Índices: monotonía y strain; ACWR con ventanas configurables; índice de disponibilidad con HRV/sueño/recuperación.
-- PRs y fuerza: 1RM estimado (Epley/Brzycki) por ejercicio; PRs absolutos/relativos por ventana.
-- Reglas y recomendaciones: umbrales por deporte/organización; sugerencias explicables con reglas + resúmenes asistidos por Gemini 2.5.
+El valor diferencial de Peaksapp es el rigor científico. No solo mostramos datos, los interpretamos.
+
+### Métricas de Carga (Load Metrics)
+1.  **Carga Interna (Internal Load)**:
+    - **sRPE (Session RPE)**: `RPE (1-10) * Duración (minutos)`. El estándar de oro para cuantificar carga subjetiva.
+    - **TRIMP (Training Impulse)**: Basado en zonas de frecuencia cardíaca (si hay datos de wearables).
+2.  **Carga Externa (External Load)**:
+    - **Volumen (Tonelaje)**: `Series * Reps * Peso`. Segmentado por patrón de movimiento (Empuje, Tracción, Pierna).
+    - **Distancia/Ritmo**: Para sesiones de cardio.
+3.  **Métricas de Gestión de Riesgo**:
+    - **ACWR (Acute:Chronic Workload Ratio)**: Relación entre la carga de la última semana (Acute) y el promedio de las últimas 4 semanas (Chronic).
+        - *Zona Segura*: 0.8 - 1.3
+        - *Zona de Peligro*: > 1.5 (Riesgo de lesión aumentado).
+    - **Monotonía (Monotony)**: `Carga Promedio Diaria / Desviación Estándar`. Detecta falta de variabilidad (riesgo de estancamiento/lesión).
+    - **Strain (Esfuerzo)**: `Carga Total Semanal * Monotonía`.
+4.  **Disponibilidad (Readiness)**:
+    - Integración de HRV (Variabilidad de Frecuencia Cardíaca) y Calidad de Sueño desde wearables.
+
+### Inteligencia Predictiva
+- Usar Gemini 3.0 Pro para cruzar **ACWR** alto + **Monotonía** alta + **Feedback** negativo en el Journal = **Alerta Roja** al entrenador.
 
 ---
 
