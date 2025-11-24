@@ -4,20 +4,30 @@ import { supabase } from '../lib/supabase';
 import { router } from 'expo-router';
 import { Colors } from '../constants/Colors';
 
-export default function Auth() {
+export default function Signup() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [fullName, setFullName] = useState('');
     const [loading, setLoading] = useState(false);
 
-    async function signInWithEmail() {
+    async function signUpWithEmail() {
         setLoading(true);
-        const { error } = await supabase.auth.signInWithPassword({
+        const { error } = await supabase.auth.signUp({
             email: email,
             password: password,
+            options: {
+                data: {
+                    full_name: fullName,
+                },
+            },
         });
 
-        if (error) Alert.alert(error.message);
-        else router.replace('/(tabs)/dashboard');
+        if (error) {
+            Alert.alert(error.message);
+        } else {
+            Alert.alert('Success', 'Please check your inbox for email verification!');
+            router.back();
+        }
         setLoading(false);
     }
 
@@ -26,11 +36,22 @@ export default function Auth() {
             <StatusBar barStyle="light-content" />
             <View style={styles.content}>
                 <View style={styles.header}>
-                    <Text style={styles.title}>PEAKS</Text>
-                    <Text style={styles.subtitle}>High Performance OS</Text>
+                    <Text style={styles.title}>Join Peaks</Text>
+                    <Text style={styles.subtitle}>Start your high performance journey</Text>
                 </View>
 
                 <View style={styles.form}>
+                    <View style={styles.inputGroup}>
+                        <Text style={styles.label}>Full Name</Text>
+                        <TextInput
+                            onChangeText={(text) => setFullName(text)}
+                            value={fullName}
+                            placeholder="John Doe"
+                            placeholderTextColor={Colors.dark.mutedForeground}
+                            style={styles.input}
+                        />
+                    </View>
+
                     <View style={styles.inputGroup}>
                         <Text style={styles.label}>Email</Text>
                         <TextInput
@@ -58,24 +79,17 @@ export default function Auth() {
 
                     <TouchableOpacity
                         style={[styles.button, loading && styles.buttonDisabled]}
-                        onPress={() => signInWithEmail()}
+                        onPress={() => signUpWithEmail()}
                         disabled={loading}
                     >
-                        <Text style={styles.buttonText}>{loading ? 'Signing in...' : 'Sign In'}</Text>
+                        <Text style={styles.buttonText}>{loading ? 'Creating account...' : 'Sign Up'}</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
                         style={styles.secondaryButton}
-                        onPress={() => router.push('/signup')}
+                        onPress={() => router.back()}
                     >
-                        <Text style={styles.secondaryButtonText}>Don't have an account? Sign Up</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        style={styles.secondaryButton}
-                        onPress={() => router.push('/coach/dashboard')}
-                    >
-                        <Text style={styles.secondaryButtonText}>Demo: Coach Mode</Text>
+                        <Text style={styles.secondaryButtonText}>Already have an account? Sign In</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -98,7 +112,7 @@ const styles = StyleSheet.create({
         marginBottom: 48,
     },
     title: {
-        fontSize: 42,
+        fontSize: 32,
         fontWeight: '800',
         color: Colors.dark.text,
         letterSpacing: -1,

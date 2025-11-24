@@ -7,7 +7,7 @@
     "lint": "eslint .",
     "generate": "drizzle-kit generate",
     "migrate": "tsx scripts/migrate.ts",
-    "push": "drizzle-kit push"
+    "push": "drizzle-kit push --config=../../drizzle.config.ts"
   },
   "dependencies": {
     "drizzle-orm": "^0.44.7",

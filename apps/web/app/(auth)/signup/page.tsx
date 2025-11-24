@@ -3,29 +3,37 @@
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, Input } from '@peaks/ui';
-import { Lock, Mail } from 'lucide-react';
+import { Lock, Mail, User } from 'lucide-react';
 
-export default function LoginPage() {
+export default function SignupPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [fullName, setFullName] = useState('');
     const [loading, setLoading] = useState(false);
     const router = useRouter();
     const supabase = createClient();
 
-    const handleLogin = async (e: React.FormEvent) => {
+    const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
 
-        const { error } = await supabase.auth.signInWithPassword({
+        const { error } = await supabase.auth.signUp({
             email,
             password,
+            options: {
+                data: {
+                    full_name: fullName,
+                },
+            },
         });
 
         if (error) {
             alert(error.message);
         } else {
-            router.push('/dashboard');
+            alert('Check your email for the confirmation link!');
+            router.push('/login');
         }
         setLoading(false);
     };
@@ -38,13 +46,26 @@ export default function LoginPage() {
 
             <Card className="w-full max-w-md border-border/50 shadow-2xl relative z-10">
                 <CardHeader className="space-y-1 text-center">
-                    <CardTitle className="text-2xl font-bold tracking-tight">Welcome back</CardTitle>
+                    <CardTitle className="text-2xl font-bold tracking-tight">Create an account</CardTitle>
                     <CardDescription>
-                        Enter your credentials to access your command center
+                        Enter your email below to create your account
                     </CardDescription>
                 </CardHeader>
-                <form onSubmit={handleLogin}>
+                <form onSubmit={handleSignup}>
                     <CardContent className="space-y-4">
+                        <div className="space-y-2">
+                            <div className="relative">
+                                <User className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                                <Input
+                                    type="text"
+                                    placeholder="Full Name"
+                                    className="pl-9 bg-background/50"
+                                    value={fullName}
+                                    onChange={(e) => setFullName(e.target.value)}
+                                    required
+                                />
+                            </div>
+                        </div>
                         <div className="space-y-2">
                             <div className="relative">
                                 <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -79,13 +100,13 @@ export default function LoginPage() {
                             variant="premium"
                             disabled={loading}
                         >
-                            {loading ? 'Signing in...' : 'Sign in'}
+                            {loading ? 'Creating account...' : 'Sign Up'}
                         </Button>
                         <div className="text-sm text-center text-muted-foreground">
-                            Don&apos;t have an account?{' '}
-                            <a href="/signup" className="text-primary hover:underline">
-                                Sign up
-                            </a>
+                            Already have an account?{' '}
+                            <Link href="/login" className="text-primary hover:underline">
+                                Sign in
+                            </Link>
                         </div>
                     </CardFooter>
                 </form>
