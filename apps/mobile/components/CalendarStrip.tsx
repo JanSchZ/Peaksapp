@@ -27,8 +27,8 @@ export function CalendarStrip({ onDateSelect, selectedDate }: CalendarStripProps
                     <TouchableOpacity
                         key={index}
                         style={[
-                            styles.dateItem,
-                            isSelected(date) && styles.dateItemSelected
+                            styles.dayItem,
+                            isSelected(date) && styles.dayItemSelected
                         ]}
                         onPress={() => onDateSelect(date)}
                     >
@@ -48,45 +48,47 @@ export function CalendarStrip({ onDateSelect, selectedDate }: CalendarStripProps
 
 const styles = StyleSheet.create({
     container: {
-        marginBottom: 24,
+        paddingVertical: 16,
+        borderBottomWidth: 1,
+        borderBottomColor: Colors.light.border,
     },
     scrollContent: {
-        paddingHorizontal: 24,
+        paddingHorizontal: 20,
         gap: 12,
     },
-    dateItem: {
+    dayItem: {
         width: 50,
         height: 70,
         borderRadius: 25,
-        backgroundColor: Colors.dark.card,
+        backgroundColor: Colors.light.card,
         alignItems: 'center',
         justifyContent: 'center',
         borderWidth: 1,
-        borderColor: Colors.dark.border,
+        borderColor: Colors.light.border,
     },
-    dateItemSelected: {
-        backgroundColor: Colors.dark.tint,
-        borderColor: Colors.dark.tint,
+    dayItemSelected: {
+        backgroundColor: Colors.light.tint,
+        borderColor: Colors.light.tint,
     },
     dayName: {
         fontSize: 12,
-        color: Colors.dark.mutedForeground,
+        color: Colors.light.mutedForeground,
         marginBottom: 4,
-        textTransform: 'uppercase',
+        fontWeight: '500',
     },
     dayNumber: {
         fontSize: 18,
-        fontWeight: 'bold',
-        color: Colors.dark.text,
+        fontWeight: '700',
+        color: Colors.light.text,
     },
     textSelected: {
-        color: Colors.dark.background,
+        color: Colors.light.background,
     },
     dot: {
         width: 4,
         height: 4,
         borderRadius: 2,
-        backgroundColor: Colors.dark.tint,
+        backgroundColor: Colors.light.tint,
         position: 'absolute',
         bottom: 8,
     },

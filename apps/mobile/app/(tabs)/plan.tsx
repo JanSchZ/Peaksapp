@@ -28,11 +28,11 @@ export default function PlanScreen() {
                 <ExpandableCard
                     title="Upper Body Power"
                     summary="45 min • Hypertrophy"
-                    icon={<Dumbbell size={20} color={Colors.dark.text} />}
+                    icon={<Dumbbell size={20} color={Colors.light.text} />}
                 >
                     <View style={styles.cardContent}>
                         <View style={styles.metricsRow}>
-                            <MetricPill label="Volume" value="8,400 kg" color={Colors.dark.tint} />
+                            <MetricPill label="Volume" value="8,400 kg" color={Colors.light.tint} />
                             <MetricPill label="Intensity" value="High" color="#ef4444" />
                         </View>
 
@@ -56,7 +56,7 @@ export default function PlanScreen() {
                 <ExpandableCard
                     title="Zone 2 Cardio"
                     summary="30 min • Recovery"
-                    icon={<Clock size={20} color={Colors.dark.text} />}
+                    icon={<Clock size={20} color={Colors.light.text} />}
                 >
                     <View style={styles.cardContent}>
                         <Text style={styles.cardText}>
@@ -75,7 +75,7 @@ export default function PlanScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.dark.background,
+        backgroundColor: Colors.light.background,
     },
     header: {
         padding: 24,
@@ -88,20 +88,20 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 32,
         fontWeight: '800',
-        color: Colors.dark.text,
+        color: Colors.light.text,
         marginBottom: 24,
     },
     sectionTitle: {
         fontSize: 18,
         fontWeight: '600',
-        color: Colors.dark.text,
+        color: Colors.light.text,
         marginBottom: 16,
     },
     cardContent: {
         gap: 16,
     },
     cardText: {
-        color: Colors.dark.mutedForeground,
+        color: Colors.light.mutedForeground,
         lineHeight: 22,
     },
     metricsRow: {
@@ -115,19 +115,19 @@ const styles = StyleSheet.create({
     },
     exerciseItem: {
         padding: 12,
-        backgroundColor: Colors.dark.background,
+        backgroundColor: Colors.light.background,
         borderRadius: 8,
         borderWidth: 1,
-        borderColor: Colors.dark.border,
+        borderColor: Colors.light.border,
     },
     exerciseName: {
         fontSize: 16,
         fontWeight: '600',
-        color: Colors.dark.text,
+        color: Colors.light.text,
         marginBottom: 2,
     },
     exerciseDetails: {
         fontSize: 14,
-        color: Colors.dark.mutedForeground,
+        color: Colors.light.mutedForeground,
     },
 });

@@ -53,13 +53,13 @@ export function CommentSection() {
                 <TextInput
                     style={styles.input}
                     placeholder="Add a comment..."
-                    placeholderTextColor={Colors.dark.mutedForeground}
+                    placeholderTextColor={Colors.light.mutedForeground}
                     value={comment}
                     onChangeText={setComment}
                     multiline
                 />
                 <TouchableOpacity style={styles.sendButton} onPress={handleSend}>
-                    <Send size={20} color={Colors.dark.primaryForeground} />
+                    <Send size={20} color={Colors.light.primaryForeground} />
                 </TouchableOpacity>
             </View>
         </View>
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 18,
         fontWeight: '600',
-        color: Colors.dark.text,
+        color: Colors.light.text,
         marginBottom: 16,
     },
     commentList: {
@@ -89,18 +89,18 @@ const styles = StyleSheet.create({
         width: 32,
         height: 32,
         borderRadius: 16,
-        backgroundColor: Colors.dark.muted,
+        backgroundColor: Colors.light.muted,
         alignItems: 'center',
         justifyContent: 'center',
     },
     avatarText: {
-        color: Colors.dark.text,
+        color: Colors.light.text,
         fontWeight: '600',
         fontSize: 14,
     },
     commentContent: {
         flex: 1,
-        backgroundColor: Colors.dark.card,
+        backgroundColor: Colors.light.card,
         padding: 12,
         borderRadius: 12,
         borderTopLeftRadius: 0,
@@ -112,15 +112,15 @@ const styles = StyleSheet.create({
     },
     username: {
         fontWeight: '600',
-        color: Colors.dark.text,
+        color: Colors.light.text,
         fontSize: 14,
     },
     timestamp: {
-        color: Colors.dark.mutedForeground,
+        color: Colors.light.mutedForeground,
         fontSize: 12,
     },
     commentText: {
-        color: Colors.dark.text,
+        color: Colors.light.text,
         lineHeight: 20,
     },
     inputContainer: {
@@ -130,19 +130,19 @@ const styles = StyleSheet.create({
     },
     input: {
         flex: 1,
-        backgroundColor: Colors.dark.input,
+        backgroundColor: Colors.light.input,
         borderRadius: 20,
         paddingHorizontal: 16,
         paddingVertical: 12,
         paddingTop: 12,
-        color: Colors.dark.text,
+        color: Colors.light.text,
         minHeight: 44,
     },
     sendButton: {
         width: 44,
         height: 44,
         borderRadius: 22,
-        backgroundColor: Colors.dark.primary,
+        backgroundColor: Colors.light.primary,
         alignItems: 'center',
         justifyContent: 'center',
     },

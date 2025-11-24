@@ -28,11 +28,11 @@ export function WorkoutCard({ title, duration, focus, week, onPress }: WorkoutCa
 
 const styles = StyleSheet.create({
     card: {
-        backgroundColor: Colors.dark.card,
+        backgroundColor: Colors.light.card,
         borderRadius: 16,
         padding: 20,
         borderWidth: 1,
-        borderColor: Colors.dark.border,
+        borderColor: Colors.light.border,
     },
     cardHeader: {
         flexDirection: 'row',
@@ -43,30 +43,30 @@ const styles = StyleSheet.create({
     cardTitle: {
         fontSize: 20,
         fontWeight: '700',
-        color: Colors.dark.text,
+        color: Colors.light.text,
     },
     cardDescription: {
         fontSize: 14,
-        color: Colors.dark.mutedForeground,
+        color: Colors.light.mutedForeground,
     },
     badge: {
-        backgroundColor: Colors.dark.accent,
+        backgroundColor: Colors.light.accent,
         paddingHorizontal: 8,
         paddingVertical: 4,
         borderRadius: 6,
     },
     badgeText: {
-        color: Colors.dark.text,
+        color: Colors.light.text,
         fontSize: 12,
         fontWeight: '600',
     },
     separator: {
         height: 1,
-        backgroundColor: Colors.dark.border,
+        backgroundColor: Colors.light.border,
         marginVertical: 16,
     },
     cardFooter: {
-        color: Colors.dark.primary,
+        color: Colors.light.primary,
         fontSize: 14,
         fontWeight: '600',
         textAlign: 'center',

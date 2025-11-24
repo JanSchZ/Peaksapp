@@ -8,7 +8,7 @@ interface MetricPillProps {
     color?: string;
 }
 
-export function MetricPill({ label, value, color = Colors.dark.tint }: MetricPillProps) {
+export function MetricPill({ label, value, color = Colors.light.tint }: MetricPillProps) {
     return (
         <View style={[styles.container, { borderColor: color }]}>
             <Text style={[styles.label, { color: color }]}>{label}</Text>
@@ -22,21 +22,18 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12,
         paddingVertical: 6,
         borderRadius: 20,
-        borderWidth: 1,
-        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minWidth: 80,
+        backgroundColor: Colors.light.muted,
+        alignSelf: 'flex-start',
     },
     label: {
-        fontSize: 10,
-        fontWeight: '700',
-        textTransform: 'uppercase',
+        fontSize: 12,
+        color: Colors.light.mutedForeground,
         marginBottom: 2,
+        fontWeight: '500',
     },
     value: {
         fontSize: 14,
-        fontWeight: '600',
-        color: Colors.dark.text,
+        fontWeight: '700',
+        color: Colors.light.text,
     },
 });

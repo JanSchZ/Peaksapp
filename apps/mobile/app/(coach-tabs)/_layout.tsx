@@ -1,8 +1,8 @@
 import { Tabs } from 'expo-router';
 import { Colors } from '../../constants/Colors';
-import { Home, Calendar, PlusCircle, User } from 'lucide-react-native';
+import { LayoutDashboard, Users, Zap, MessageSquare } from 'lucide-react-native';
 
-export default function TabLayout() {
+export default function CoachTabLayout() {
     return (
         <Tabs
             screenOptions={{
@@ -26,29 +26,29 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="dashboard"
                 options={{
-                    title: 'Home',
-                    tabBarIcon: ({ color, size }) => <Home color={color} size={size} />,
+                    title: 'Overview',
+                    tabBarIcon: ({ color, size }) => <LayoutDashboard color={color} size={size} />,
                 }}
             />
             <Tabs.Screen
-                name="plan"
+                name="athletes"
                 options={{
-                    title: 'Plan',
-                    tabBarIcon: ({ color, size }) => <Calendar color={color} size={size} />,
+                    title: 'Athletes',
+                    tabBarIcon: ({ color, size }) => <Users color={color} size={size} />,
                 }}
             />
             <Tabs.Screen
-                name="log"
+                name="session"
                 options={{
-                    title: 'Log',
-                    tabBarIcon: ({ color, size }) => <PlusCircle color={color} size={size} />,
+                    title: 'Live Session',
+                    tabBarIcon: ({ color, size }) => <Zap color={color} size={size} />,
                 }}
             />
             <Tabs.Screen
-                name="profile"
+                name="inbox"
                 options={{
-                    title: 'Profile',
-                    tabBarIcon: ({ color, size }) => <User color={color} size={size} />,
+                    title: 'Inbox',
+                    tabBarIcon: ({ color, size }) => <MessageSquare color={color} size={size} />,
                 }}
             />
         </Tabs>

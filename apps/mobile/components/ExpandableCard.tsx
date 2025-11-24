@@ -25,7 +25,7 @@ export function ExpandableCard({ title, summary, children, icon }: ExpandableCar
     };
 
     return (
-        <View style={styles.card}>
+        <View style={styles.container}>
             <TouchableOpacity onPress={toggleExpand} style={styles.header} activeOpacity={0.7}>
                 <View style={styles.headerLeft}>
                     {icon && <View style={styles.iconContainer}>{icon}</View>}
@@ -44,9 +44,9 @@ export function ExpandableCard({ title, summary, children, icon }: ExpandableCar
                 </View>
                 <View>
                     {expanded ? (
-                        <ChevronUp size={20} color={Colors.dark.mutedForeground} />
+                        <ChevronUp size={20} color={Colors.light.mutedForeground} />
                     ) : (
-                        <ChevronDown size={20} color={Colors.dark.mutedForeground} />
+                        <ChevronDown size={20} color={Colors.light.mutedForeground} />
                     )}
                 </View>
             </TouchableOpacity>
@@ -60,51 +60,52 @@ export function ExpandableCard({ title, summary, children, icon }: ExpandableCar
 }
 
 const styles = StyleSheet.create({
-    card: {
-        backgroundColor: Colors.dark.card,
+    container: {
+        backgroundColor: Colors.light.card,
         borderRadius: 16,
         marginBottom: 16,
         borderWidth: 1,
-        borderColor: Colors.dark.border,
+        borderColor: Colors.light.border,
         overflow: 'hidden',
     },
     header: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
         alignItems: 'center',
         padding: 16,
+        gap: 12,
+        backgroundColor: Colors.light.card,
     },
     headerLeft: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 12,
         flex: 1,
+        gap: 12,
     },
     iconContainer: {
         width: 40,
         height: 40,
         borderRadius: 20,
-        backgroundColor: Colors.dark.input,
+        backgroundColor: Colors.light.muted,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    summaryContainer: {
+        marginTop: 4,
     },
     title: {
         fontSize: 16,
         fontWeight: '600',
-        color: Colors.dark.text,
-        marginBottom: 4,
-    },
-    summaryContainer: {
-        marginTop: 2,
+        color: Colors.light.text,
+        marginBottom: 2,
     },
     summary: {
         fontSize: 14,
-        color: Colors.dark.mutedForeground,
+        color: Colors.light.mutedForeground,
     },
     content: {
         padding: 16,
         paddingTop: 0,
         borderTopWidth: 1,
-        borderTopColor: Colors.dark.border,
+        borderTopColor: Colors.light.border,
     },
 });

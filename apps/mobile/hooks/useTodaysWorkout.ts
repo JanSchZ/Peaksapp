@@ -1,26 +1,63 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../lib/supabase';
+import { useUser } from '../context/UserContext';
 
 export function useTodaysWorkout() {
-    return useQuery({
-        queryKey: ['todaysWorkout'],
-        queryFn: async () => {
-            // In a real app, we'd query based on the current date and user ID
-            // For MVP, we'll mock the response or fetch the latest planned session
+    const { user } = useUser();
 
-            // Mock data structure matching our DB schema
+    return useQuery({
+        queryKey: ['todaysWorkout', user?.id],
+        queryFn: async () => {
+            if (!user) return null;
+
+            const today = new Date().toISOString().split('T')[0];
+
+            const { data, error } = await supabase
+                .from('workouts')
+                .select(`
+                    id,
+                    title,
+                    duration,
+                    focus,
+                    week,
+                    workout_exercises (
+                        id,
+                        sets,
+                        reps,
+                        rpe,
+                        exercises (
+                            id,
+                            name
+                        )
+                    )
+                `)
+                .eq('user_id', user.id)
+                .eq('date', today)
+                .maybeSingle();
+
+            if (error) {
+                console.error('Error fetching workout:', error);
+                throw error;
+            }
+
+            if (!data) return null;
+
+            // Transform data to match UI expectations
             return {
-                id: '1',
-                title: 'Lower Body Power',
-                duration: 60,
-                focus: 'Squat Focus',
-                week: 3,
-                exercises: [
-                    { id: '1', name: 'Back Squat', sets: 4, reps: '5', rpe: 8 },
-                    { id: '2', name: 'Box Jumps', sets: 3, reps: '5', rpe: 0 },
-                    { id: '3', name: 'Romanian Deadlift', sets: 3, reps: '8', rpe: 7 },
-                ]
+                id: data.id,
+                title: data.title,
+                duration: data.duration,
+                focus: data.focus,
+                week: data.week,
+                exercises: data.workout_exercises.map((we: any) => ({
+                    id: we.id,
+                    name: we.exercises?.name || 'Unknown Exercise',
+                    sets: we.sets,
+                    reps: we.reps,
+                    rpe: we.rpe
+                }))
             };
         },
+        enabled: !!user,
     });
 }

@@ -8,6 +8,7 @@ export default function Signup() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [fullName, setFullName] = useState('');
+    const [userType, setUserType] = useState<'athlete' | 'coach'>('athlete');
     const [loading, setLoading] = useState(false);
 
     async function signUpWithEmail() {
@@ -18,6 +19,7 @@ export default function Signup() {
             options: {
                 data: {
                     full_name: fullName,
+                    user_type: userType,
                 },
             },
         });
@@ -33,7 +35,7 @@ export default function Signup() {
 
     return (
         <SafeAreaView style={styles.container}>
-            <StatusBar barStyle="light-content" />
+            <StatusBar barStyle="dark-content" />
             <View style={styles.content}>
                 <View style={styles.header}>
                     <Text style={styles.title}>Join Peaks</Text>
@@ -42,12 +44,30 @@ export default function Signup() {
 
                 <View style={styles.form}>
                     <View style={styles.inputGroup}>
+                        <Text style={styles.label}>I am a...</Text>
+                        <View style={styles.typeSelector}>
+                            <TouchableOpacity
+                                style={[styles.typeButton, userType === 'athlete' && styles.typeButtonSelected]}
+                                onPress={() => setUserType('athlete')}
+                            >
+                                <Text style={[styles.typeText, userType === 'athlete' && styles.typeTextSelected]}>Athlete</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[styles.typeButton, userType === 'coach' && styles.typeButtonSelected]}
+                                onPress={() => setUserType('coach')}
+                            >
+                                <Text style={[styles.typeText, userType === 'coach' && styles.typeTextSelected]}>Coach</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+
+                    <View style={styles.inputGroup}>
                         <Text style={styles.label}>Full Name</Text>
                         <TextInput
                             onChangeText={(text) => setFullName(text)}
                             value={fullName}
                             placeholder="John Doe"
-                            placeholderTextColor={Colors.dark.mutedForeground}
+                            placeholderTextColor={Colors.light.mutedForeground}
                             style={styles.input}
                         />
                     </View>
@@ -58,7 +78,7 @@ export default function Signup() {
                             onChangeText={(text) => setEmail(text)}
                             value={email}
                             placeholder="athlete@peaks.com"
-                            placeholderTextColor={Colors.dark.mutedForeground}
+                            placeholderTextColor={Colors.light.mutedForeground}
                             autoCapitalize={'none'}
                             style={styles.input}
                         />
@@ -71,7 +91,7 @@ export default function Signup() {
                             value={password}
                             secureTextEntry={true}
                             placeholder="••••••••"
-                            placeholderTextColor={Colors.dark.mutedForeground}
+                            placeholderTextColor={Colors.light.mutedForeground}
                             autoCapitalize={'none'}
                             style={styles.input}
                         />
@@ -100,7 +120,7 @@ export default function Signup() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.dark.background,
+        backgroundColor: Colors.light.background,
     },
     content: {
         flex: 1,
@@ -114,12 +134,12 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 32,
         fontWeight: '800',
-        color: Colors.dark.text,
+        color: Colors.light.text,
         letterSpacing: -1,
     },
     subtitle: {
         fontSize: 16,
-        color: Colors.dark.mutedForeground,
+        color: Colors.light.mutedForeground,
         marginTop: 8,
         letterSpacing: 0.5,
     },
@@ -130,21 +150,21 @@ const styles = StyleSheet.create({
         gap: 8,
     },
     label: {
-        color: Colors.dark.text,
+        color: Colors.light.text,
         fontSize: 14,
         fontWeight: '500',
     },
     input: {
-        backgroundColor: Colors.dark.input,
-        color: Colors.dark.text,
+        backgroundColor: Colors.light.input,
+        color: Colors.light.text,
         padding: 16,
         borderRadius: 12,
         borderWidth: 1,
-        borderColor: Colors.dark.border,
+        borderColor: Colors.light.border,
         fontSize: 16,
     },
     button: {
-        backgroundColor: Colors.dark.primary,
+        backgroundColor: Colors.light.primary,
         padding: 16,
         borderRadius: 12,
         alignItems: 'center',
@@ -154,7 +174,7 @@ const styles = StyleSheet.create({
         opacity: 0.7,
     },
     buttonText: {
-        color: Colors.dark.primaryForeground,
+        color: Colors.light.primaryForeground,
         fontSize: 16,
         fontWeight: '600',
     },
@@ -163,8 +183,33 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     secondaryButtonText: {
-        color: Colors.dark.mutedForeground,
+        color: Colors.light.mutedForeground,
         fontSize: 14,
         fontWeight: '500',
+    },
+    typeSelector: {
+        flexDirection: 'row',
+        gap: 12,
+    },
+    typeButton: {
+        flex: 1,
+        paddingVertical: 12,
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: Colors.light.border,
+        alignItems: 'center',
+        backgroundColor: Colors.light.input,
+    },
+    typeButtonSelected: {
+        backgroundColor: Colors.light.tint,
+        borderColor: Colors.light.tint,
+    },
+    typeText: {
+        color: Colors.light.mutedForeground,
+        fontWeight: '600',
+        fontSize: 16,
+    },
+    typeTextSelected: {
+        color: Colors.light.background,
     },
 });
