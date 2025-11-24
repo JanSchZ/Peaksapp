@@ -2,10 +2,12 @@ import React, { useState, useRef } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, Animated, Dimensions } from 'react-native';
 import { Colors } from '../../constants/Colors';
 import { Send, X, Sparkles, Plus } from 'lucide-react-native';
+import { supabase } from '../../lib/supabase';
 
 interface AssistantSheetProps {
     visible: boolean;
     onClose: () => void;
+    onAction?: (action: any) => void;
 }
 
 interface Message {
@@ -18,12 +20,14 @@ interface Message {
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
-export function AssistantSheet({ visible, onClose }: AssistantSheetProps) {
+export function AssistantSheet({ visible, onClose, onAction }: AssistantSheetProps) {
     const [messages, setMessages] = useState<Message[]>([
         { id: '1', role: 'assistant', content: 'Hello Coach. I\'ve analyzed the recent training data. Sarah seems to be accumulating fatigue on her lower body. Should we adjust the volume for this week?' }
     ]);
     const [inputText, setInputText] = useState('');
     const slideAnim = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
+
+    const [isTyping, setIsTyping] = useState(false);
 
     const [show, setShow] = useState(visible);
 
@@ -44,33 +48,46 @@ export function AssistantSheet({ visible, onClose }: AssistantSheetProps) {
         }
     }, [visible]);
 
-    const handleSend = () => {
+    const handleSend = async () => {
         if (!inputText.trim()) return;
 
-        const newMessage: Message = {
-            id: Date.now().toString(),
-            role: 'user',
-            content: inputText,
-        };
-
-        setMessages(prev => [...prev, newMessage]);
+        const userMsg: Message = { id: Date.now().toString(), role: 'user', content: inputText };
+        setMessages(prev => [...prev, userMsg]);
         setInputText('');
+        setIsTyping(true);
 
-        // Mock AI response
-        setTimeout(() => {
-            const response: Message = {
+        try {
+            const { data, error } = await supabase.functions.invoke('chat-assistant', {
+                body: {
+                    messages: [...messages, userMsg],
+                    context: {
+                        // In a real app, pass current plan ID, week, etc.
+                        planContext: 'Editing Week 1'
+                    }
+                }
+            });
+
+            if (error) throw error;
+
+            const aiMsg: Message = {
                 id: (Date.now() + 1).toString(),
                 role: 'assistant',
-                content: 'I\'ve generated a recovery session focusing on mobility and light activation.',
-                type: 'workout_suggestion',
-                data: {
-                    title: 'Active Recovery',
-                    duration: '45m',
-                    exercises: ['Foam Rolling', '90/90 Stretch', 'Cat-Cow']
-                }
+                content: data.content,
+                data: data.data
             };
-            setMessages(prev => [...prev, response]);
-        }, 1000);
+
+            setMessages(prev => [...prev, aiMsg]);
+        } catch (error) {
+            console.error('AI Error:', error);
+            const errorMsg: Message = {
+                id: (Date.now() + 1).toString(),
+                role: 'assistant',
+                content: "I'm having trouble connecting to the server. Please try again."
+            };
+            setMessages(prev => [...prev, errorMsg]);
+        } finally {
+            setIsTyping(false);
+        }
     };
 
     if (!show) return null;
@@ -109,7 +126,10 @@ export function AssistantSheet({ visible, onClose }: AssistantSheetProps) {
                                         <Text key={i} style={styles.exerciseItem}>• {ex}</Text>
                                     ))}
                                 </View>
-                                <TouchableOpacity style={styles.actionButton}>
+                                <TouchableOpacity
+                                    style={styles.actionButton}
+                                    onPress={() => onAction?.({ type: 'ADD_WORKOUT', payload: msg.data })}
+                                >
                                     <Plus size={16} color="#fff" />
                                     <Text style={styles.actionButtonText}>Add to Plan</Text>
                                 </TouchableOpacity>

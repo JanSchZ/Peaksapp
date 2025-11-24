@@ -1,77 +1,166 @@
 import { useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import { Stack } from 'expo-router';
 import { Colors } from '../../constants/Colors';
 import { CycleNavigator } from '../../components/planning/CycleNavigator';
 import { AssistantSheet } from '../../components/ai/AssistantSheet';
-import { Plus, MoreHorizontal } from 'lucide-react-native';
+import { MacroCycleView } from '../../components/planning/MacroCycleView';
+import { Plus, MoreHorizontal, ClipboardPaste } from 'lucide-react-native';
+import { usePlan, WorkoutBlock } from '../../hooks/usePlan';
 
 export default function PlanningEditor() {
+    const { plan, isLoading, saveDay, createPlan } = usePlan();
     const [currentWeek, setCurrentWeek] = useState(1);
     const [assistantVisible, setAssistantVisible] = useState(false);
+    const [viewMode, setViewMode] = useState<'micro' | 'macro'>('micro');
+    const [clipboard, setClipboard] = useState<WorkoutBlock | null>(null);
 
-    // Mock data for the current week's plan
-    const weekPlan = [
-        { day: 'Monday', date: 'Oct 23', workout: { title: 'Squat Heavy', volume: '4,200kg' } },
-        { day: 'Tuesday', date: 'Oct 24', workout: null }, // Rest day
-        { day: 'Wednesday', date: 'Oct 25', workout: { title: 'Bench Press', volume: '3,100kg' } },
-        { day: 'Thursday', date: 'Oct 26', workout: null },
-        { day: 'Friday', date: 'Oct 27', workout: { title: 'Deadlift', volume: '5,150kg' } },
-        { day: 'Saturday', date: 'Oct 28', workout: { title: 'Active Recovery', volume: 'Light' } },
-        { day: 'Sunday', date: 'Oct 29', workout: null },
-    ];
+    // Derived state: Get the current week's days from the fetched plan
+    const currentWeekData = plan?.weeks.find(w => w.week_number === currentWeek);
+    const weekDays = currentWeekData?.days || [];
 
     const handlePrevious = () => setCurrentWeek(prev => Math.max(1, prev - 1));
-    const handleNext = () => setCurrentWeek(prev => prev + 1);
+    const handleNext = () => setCurrentWeek(prev => Math.min(plan?.weeks.length || 4, prev + 1));
+
+    const handleCopy = (workout: WorkoutBlock) => {
+        setClipboard(workout);
+        Alert.alert('Copied', 'Workout copied to clipboard');
+    };
+
+    const handlePaste = (dayId: string) => {
+        if (!clipboard) return;
+        const newWorkout = { ...clipboard, title: clipboard.title + ' (Copy)' };
+
+        // Optimistic update (UI will update when query refetches)
+        saveDay({ dayId, workoutData: newWorkout });
+        setClipboard(null);
+    };
+
+    const handleAIAction = (action: any) => {
+        if (action.type === 'ADD_WORKOUT') {
+            // Find first empty day in current week
+            const emptyDay = weekDays.find(d => d.workout_data === null);
+
+            if (emptyDay) {
+                const newWorkout: WorkoutBlock = {
+                    title: action.payload.title,
+                    volume: 'Planned',
+                    exercises: action.payload.exercises || []
+                };
+
+                saveDay({ dayId: emptyDay.id, workoutData: newWorkout });
+                setAssistantVisible(false);
+                Alert.alert('Added', `Added ${action.payload.title} to ${new Date(emptyDay.date).toLocaleDateString('en-US', { weekday: 'long' })}`);
+            } else {
+                Alert.alert('Full', 'No empty days available in this week.');
+            }
+        }
+    };
+
+    if (isLoading) {
+        return (
+            <View style={styles.centered}>
+                <ActivityIndicator size="large" color={Colors.light.primary} />
+            </View>
+        );
+    }
+
+    if (!plan) {
+        return (
+            <View style={styles.centered}>
+                <Text style={styles.emptyText}>No Active Plan Found</Text>
+                <TouchableOpacity
+                    style={styles.createButton}
+                    onPress={() => createPlan('New Macrocycle')}
+                >
+                    <Text style={styles.createButtonText}>Create New Plan</Text>
+                </TouchableOpacity>
+            </View>
+        );
+    }
 
     return (
         <SafeAreaView style={styles.container}>
             <Stack.Screen options={{ headerShown: false }} />
 
-            <CycleNavigator
-                currentPeriod={`Week ${currentWeek}`}
-                periodLabel="Mesocycle 1 • Hypertrophy"
-                onPrevious={handlePrevious}
-                onNext={handleNext}
-                onZoomOut={() => console.log('Zoom out to Macro View')}
-            />
+            {viewMode === 'macro' ? (
+                <MacroCycleView onSelectWeek={(week) => {
+                    setCurrentWeek(week);
+                    setViewMode('micro');
+                }} />
+            ) : (
+                <>
+                    <CycleNavigator
+                        currentPeriod={`Week ${currentWeek}`}
+                        periodLabel={`${plan.title} • ${currentWeekData?.focus || 'General'}`}
+                        onPrevious={handlePrevious}
+                        onNext={handleNext}
+                        onZoomOut={() => setViewMode('macro')}
+                    />
 
-            <ScrollView style={styles.content} contentContainerStyle={styles.scrollContent}>
-                {weekPlan.map((day, index) => (
-                    <View key={index} style={styles.dayRow}>
-                        <View style={styles.dayHeader}>
-                            <Text style={styles.dayName}>{day.day}</Text>
-                            <Text style={styles.dayDate}>{day.date}</Text>
-                        </View>
+                    <ScrollView style={styles.content} contentContainerStyle={styles.scrollContent}>
+                        {weekDays.map((day) => {
+                            const dateObj = new Date(day.date);
+                            const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
+                            const dateStr = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
-                        <View style={styles.dayContent}>
-                            {day.workout ? (
-                                <TouchableOpacity style={styles.workoutBlock}>
-                                    <View>
-                                        <Text style={styles.workoutTitle}>{day.workout.title}</Text>
-                                        <Text style={styles.workoutVolume}>{day.workout.volume}</Text>
+                            return (
+                                <View key={day.id} style={styles.dayRow}>
+                                    <View style={styles.dayHeader}>
+                                        <Text style={styles.dayName}>{dayName}</Text>
+                                        <Text style={styles.dayDate}>{dateStr}</Text>
                                     </View>
-                                    <TouchableOpacity style={styles.moreButton}>
-                                        <MoreHorizontal size={20} color={Colors.light.mutedForeground} />
-                                    </TouchableOpacity>
-                                </TouchableOpacity>
-                            ) : (
-                                <TouchableOpacity style={styles.emptyBlock}>
-                                    <Plus size={20} color={Colors.light.mutedForeground} />
-                                    <Text style={styles.addText}>Add Session</Text>
-                                </TouchableOpacity>
-                            )}
-                        </View>
-                    </View>
-                ))}
-            </ScrollView>
 
-            {/* Floating Action Button for AI Assistant */}
-            <TouchableOpacity style={styles.aiFab} onPress={() => setAssistantVisible(true)}>
-                <Text style={styles.aiFabText}>✨ Ask Peaks AI</Text>
-            </TouchableOpacity>
+                                    <View style={styles.dayContent}>
+                                        {day.workout_data ? (
+                                            <TouchableOpacity
+                                                style={styles.workoutBlock}
+                                                onLongPress={() => handleCopy(day.workout_data!)}
+                                            >
+                                                <View>
+                                                    <Text style={styles.workoutTitle}>{day.workout_data.title}</Text>
+                                                    <Text style={styles.workoutVolume}>{day.workout_data.volume}</Text>
+                                                </View>
+                                                <TouchableOpacity style={styles.moreButton}>
+                                                    <MoreHorizontal size={20} color={Colors.light.mutedForeground} />
+                                                </TouchableOpacity>
+                                            </TouchableOpacity>
+                                        ) : (
+                                            <TouchableOpacity
+                                                style={styles.emptyBlock}
+                                                onPress={() => handlePaste(day.id)}
+                                            >
+                                                {clipboard ? (
+                                                    <>
+                                                        <ClipboardPaste size={20} color={Colors.light.primary} />
+                                                        <Text style={[styles.addText, { color: Colors.light.primary }]}>Paste Workout</Text>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Plus size={20} color={Colors.light.mutedForeground} />
+                                                        <Text style={styles.addText}>Add Session</Text>
+                                                    </>
+                                                )}
+                                            </TouchableOpacity>
+                                        )}
+                                    </View>
+                                </View>
+                            );
+                        })}
+                    </ScrollView>
 
-            <AssistantSheet visible={assistantVisible} onClose={() => setAssistantVisible(false)} />
+                    {/* Floating Action Button for AI Assistant */}
+                    <TouchableOpacity style={styles.aiFab} onPress={() => setAssistantVisible(true)}>
+                        <Text style={styles.aiFabText}>✨ Ask Peaks AI</Text>
+                    </TouchableOpacity>
+
+                    <AssistantSheet
+                        visible={assistantVisible}
+                        onClose={() => setAssistantVisible(false)}
+                        onAction={handleAIAction}
+                    />
+                </>
+            )}
         </SafeAreaView>
     );
 }
@@ -80,6 +169,27 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: Colors.light.background,
+    },
+    centered: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: Colors.light.background,
+    },
+    emptyText: {
+        fontSize: 18,
+        color: Colors.light.mutedForeground,
+        marginBottom: 20,
+    },
+    createButton: {
+        backgroundColor: Colors.light.primary,
+        paddingHorizontal: 24,
+        paddingVertical: 12,
+        borderRadius: 8,
+    },
+    createButtonText: {
+        color: '#fff',
+        fontWeight: 'bold',
     },
     content: {
         flex: 1,

@@ -8,10 +8,21 @@ const API_KEYS = {
 
 export const RevenueCatService = {
     async init(userId?: string) {
-        if (Platform.OS === 'ios') {
-            Purchases.configure({ apiKey: API_KEYS.ios, appUserID: userId });
-        } else if (Platform.OS === 'android') {
-            Purchases.configure({ apiKey: API_KEYS.android, appUserID: userId });
+        try {
+            // Skip initialization in Expo Go (development mode)
+            const isExpoGo = __DEV__ && !API_KEYS.ios && !API_KEYS.android;
+            if (isExpoGo) {
+                console.log('Expo Go app detected. Using RevenueCat in Browser Mode.');
+                return;
+            }
+
+            if (Platform.OS === 'ios' && API_KEYS.ios) {
+                Purchases.configure({ apiKey: API_KEYS.ios, appUserID: userId });
+            } else if (Platform.OS === 'android' && API_KEYS.android) {
+                Purchases.configure({ apiKey: API_KEYS.android, appUserID: userId });
+            }
+        } catch (error) {
+            console.warn('RevenueCat initialization failed (running in Expo Go?):', error);
         }
     },
 
@@ -48,13 +59,13 @@ export const RevenueCatService = {
         }
     },
 
-    async checkEntitlement(entitlementId: string = 'pro'): Promise<boolean> {
+    async checkEntitlement(): Promise<boolean> {
         try {
             const customerInfo = await Purchases.getCustomerInfo();
-            return typeof customerInfo.entitlements.active[entitlementId] !== 'undefined';
-        } catch (e) {
-            console.error('Error checking entitlement', e);
-            return false;
+            return customerInfo.entitlements.active['pro'] !== undefined;
+        } catch (error) {
+            console.warn('Error checking entitlement', error);
+            return false; // Return free tier in development
         }
     },
 
