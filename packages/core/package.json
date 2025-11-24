@@ -10,13 +10,13 @@
     "push": "drizzle-kit push"
   },
   "dependencies": {
-    "drizzle-orm": "^0.30.0",
+    "drizzle-orm": "^0.44.7",
     "postgres": "^3.4.3",
     "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/node": "^20.11.24",
-    "drizzle-kit": "^0.20.14",
+    "drizzle-kit": "^0.30.6",
     "tsx": "^4.20.6",
     "typescript": "^5.3.3"
   }
