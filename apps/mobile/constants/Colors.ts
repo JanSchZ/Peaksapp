@@ -13,5 +13,6 @@ export const Colors = {
         text: '#fafafa',
         input: '#27272a',
         ring: '#d4d4d8',
+        tint: '#ccff00', // Neon Lime
     },
 };

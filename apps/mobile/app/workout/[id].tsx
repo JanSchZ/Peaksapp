@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, TextInput } from 'react-native';
-import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import { Colors } from '../../constants/Colors';
-import { ArrowLeft, Check, Clock, Info } from 'lucide-react-native';
+import { ArrowLeft, Clock, Check, Dumbbell } from 'lucide-react-native';
+import { ExpandableCard } from '../../components/ExpandableCard';
+import { CommentSection } from '../../components/CommentSection';
 
 // Mock data for the session (In real app, fetch by ID)
 const SESSION_DATA = {
@@ -34,7 +36,6 @@ const SESSION_DATA = {
 
 export default function WorkoutLogger() {
     const router = useRouter();
-    const params = useLocalSearchParams();
     const [exercises, setExercises] = useState(SESSION_DATA.exercises);
 
     const toggleSet = (exerciseIndex: number, setIndex: number) => {
@@ -66,59 +67,61 @@ export default function WorkoutLogger() {
 
             <ScrollView contentContainerStyle={styles.content}>
                 {exercises.map((exercise, exIndex) => (
-                    <View key={exercise.id} style={styles.exerciseCard}>
-                        <View style={styles.exerciseHeader}>
-                            <Text style={styles.exerciseName}>{exercise.name}</Text>
-                            <TouchableOpacity>
-                                <Info size={20} color={Colors.dark.mutedForeground} />
-                            </TouchableOpacity>
-                        </View>
-
-                        {/* Table Header */}
-                        <View style={styles.setRowHeader}>
-                            <Text style={[styles.colHeader, styles.colSet]}>SET</Text>
-                            <Text style={[styles.colHeader, styles.colPrev]}>PREV</Text>
-                            <Text style={[styles.colHeader, styles.colKg]}>KG</Text>
-                            <Text style={[styles.colHeader, styles.colReps]}>REPS</Text>
-                            <Text style={[styles.colHeader, styles.colCheck]}></Text>
-                        </View>
-
-                        {/* Sets */}
-                        {exercise.sets.map((set, setIndex) => (
-                            <View key={set.id} style={[styles.setRow, set.completed && styles.setRowCompleted]}>
-                                <View style={styles.colSet}>
-                                    <View style={[styles.setTypeIndicator, set.type === 'warmup' ? styles.warmupIndicator : styles.workIndicator]}>
-                                        <Text style={styles.setTypeText}>{setIndex + 1}</Text>
-                                    </View>
-                                </View>
-                                <Text style={[styles.colPrev, styles.prevText]}>100x5</Text>
-
-                                <View style={styles.colKg}>
-                                    <TextInput
-                                        style={[styles.input, set.completed && styles.inputCompleted]}
-                                        defaultValue={set.weight.toString()}
-                                        keyboardType="numeric"
-                                    />
-                                </View>
-
-                                <View style={styles.colReps}>
-                                    <TextInput
-                                        style={[styles.input, set.completed && styles.inputCompleted]}
-                                        defaultValue={set.reps.toString()}
-                                        keyboardType="numeric"
-                                    />
-                                </View>
-
-                                <TouchableOpacity
-                                    style={[styles.checkButton, set.completed && styles.checkButtonCompleted]}
-                                    onPress={() => toggleSet(exIndex, setIndex)}
-                                >
-                                    <Check size={16} color={set.completed ? Colors.dark.background : Colors.dark.mutedForeground} />
-                                </TouchableOpacity>
+                    <ExpandableCard
+                        key={exercise.id}
+                        title={exercise.name}
+                        summary={`${exercise.sets.length} sets`}
+                        icon={<Dumbbell size={20} color={Colors.dark.text} />}
+                    >
+                        <View style={styles.exerciseContent}>
+                            {/* Table Header */}
+                            <View style={styles.setRowHeader}>
+                                <Text style={[styles.colHeader, styles.colSet]}>SET</Text>
+                                <Text style={[styles.colHeader, styles.colPrev]}>PREV</Text>
+                                <Text style={[styles.colHeader, styles.colKg]}>KG</Text>
+                                <Text style={[styles.colHeader, styles.colReps]}>REPS</Text>
+                                <Text style={[styles.colHeader, styles.colCheck]}></Text>
                             </View>
-                        ))}
-                    </View>
+
+                            {/* Sets */}
+                            {exercise.sets.map((set, setIndex) => (
+                                <View key={set.id} style={[styles.setRow, set.completed && styles.setRowCompleted]}>
+                                    <View style={styles.colSet}>
+                                        <View style={[styles.setTypeIndicator, set.type === 'warmup' ? styles.warmupIndicator : styles.workIndicator]}>
+                                            <Text style={styles.setTypeText}>{setIndex + 1}</Text>
+                                        </View>
+                                    </View>
+                                    <Text style={[styles.colPrev, styles.prevText]}>100x5</Text>
+
+                                    <View style={styles.colKg}>
+                                        <TextInput
+                                            style={[styles.input, set.completed && styles.inputCompleted]}
+                                            defaultValue={set.weight.toString()}
+                                            keyboardType="numeric"
+                                        />
+                                    </View>
+
+                                    <View style={styles.colReps}>
+                                        <TextInput
+                                            style={[styles.input, set.completed && styles.inputCompleted]}
+                                            defaultValue={set.reps.toString()}
+                                            keyboardType="numeric"
+                                        />
+                                    </View>
+
+                                    <TouchableOpacity
+                                        style={[styles.checkButton, set.completed && styles.checkButtonCompleted]}
+                                        onPress={() => toggleSet(exIndex, setIndex)}
+                                    >
+                                        <Check size={16} color={set.completed ? Colors.dark.background : Colors.dark.mutedForeground} />
+                                    </TouchableOpacity>
+                                </View>
+                            ))}
+                        </View>
+                    </ExpandableCard>
                 ))}
+
+                <CommentSection />
             </ScrollView>
         </SafeAreaView>
     );
@@ -270,5 +273,8 @@ const styles = StyleSheet.create({
     },
     checkButtonCompleted: {
         backgroundColor: '#22c55e', // Green-500
+    },
+    exerciseContent: {
+        gap: 8,
     },
 });
