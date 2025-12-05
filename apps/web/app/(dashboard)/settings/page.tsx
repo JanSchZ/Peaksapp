@@ -62,7 +62,7 @@ export default function SettingsPage() {
                                 <p className="text-xs text-muted-foreground">Receive daily summaries of athlete compliance.</p>
                             </div>
                             <div className="h-6 w-11 bg-primary rounded-full relative cursor-pointer">
-                                <div className="absolute right-1 top-1 h-4 w-4 bg-white rounded-full shadow-sm" />
+                                <div className="absolute right-1 top-1 h-4 w-4 bg-white rounded-full shadow-xs" />
                             </div>
                         </div>
                         <div className="flex items-center justify-between p-3 rounded-lg border border-border/50 bg-accent/20">
@@ -71,7 +71,7 @@ export default function SettingsPage() {
                                 <p className="text-xs text-muted-foreground">Get notified when an athlete sends a message.</p>
                             </div>
                             <div className="h-6 w-11 bg-primary rounded-full relative cursor-pointer">
-                                <div className="absolute right-1 top-1 h-4 w-4 bg-white rounded-full shadow-sm" />
+                                <div className="absolute right-1 top-1 h-4 w-4 bg-white rounded-full shadow-xs" />
                             </div>
                         </div>
                     </div>

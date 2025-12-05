@@ -51,7 +51,7 @@ export default function LibraryPage() {
                             key={tab}
                             onClick={() => setActiveTab(tab)}
                             className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${activeTab === tab
-                                ? 'bg-background text-foreground shadow-sm'
+                                ? 'bg-background text-foreground shadow-xs'
                                 : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
                                 }`}
                         >

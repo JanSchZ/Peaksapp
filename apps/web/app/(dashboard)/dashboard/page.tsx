@@ -190,7 +190,7 @@ export default function DashboardPage() {
                         </CardContent>
                     </Card>
 
-                    <Card className="bg-gradient-to-br from-indigo-600 to-purple-700 border-none text-white">
+                    <Card className="bg-linear-to-br from-indigo-600 to-purple-700 border-none text-white">
                         <CardHeader>
                             <CardTitle className="text-white">Pro Tips</CardTitle>
                         </CardHeader>

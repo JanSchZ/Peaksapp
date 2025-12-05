@@ -4,34 +4,32 @@ Este documento resume el enfoque técnico recomendado para construir la platafor
 
 ## Resumen ejecutivo
 
-- **Monorepo TypeScript (Turborepo)**: `apps/web` (Next.js 14), `apps/mobile` (Expo 52), `packages/core` (Drizzle/Zod), `packages/ui` (Shadcn/UI), `packages/config`.
+- **Monorepo TypeScript (Turborepo)**: `apps/web` (Next.js 16), `apps/mobile` (Expo 52), `packages/core` (Drizzle/Zod), `packages/ui` (Shadcn/UI), `packages/config`.
 - **Datos/Backend**: Supabase (Postgres + Auth + Realtime + Storage + Edge Functions). Migraciones con Drizzle controladas en el repo.
-- **Web (entrenadores)**: Next.js 14.2.x (App Router), React 18.3.x, **Zustand** (Estado Global), **TanStack Query** (Data Fetching), **Recharts** (Gráficos), **@dnd-kit** (Drag & Drop).
+- **Web (entrenadores)**: Next.js 16 (App Router), React 19, **Zustand** (Estado Global), **TanStack Query** (Data Fetching), **Recharts** (Gráficos), **@dnd-kit** (Drag & Drop).
 - **Mobile (atletas y entrenadores)**: React Native 0.76 + Expo 52. **TanStack Query + AsyncStorage** (Offline-Tolerant). **Victory Native** (Gráficos). **FlashList** (Listas rápidas).
-- **Design System**: Dark mode premium, Inter font, componentes Shadcn/UI (Button, Input, Card), Glassmorphism, CSS variables con HSL.
+- **Design System**: Dark mode premium, Inter font, componentes Shadcn/UI (Button, Input, Card), Glassmorphism, CSS variables con HSL, Tailwind CSS v4.
 - **Auth**: Supabase Auth con SSR (@supabase/ssr para web, AsyncStorage para mobile), OAuth Google/Apple + Email.
 - **Media**: Cloudflare Stream o Mux para video (futuro); Cloudflare R2 como storage principal para imágenes/archivos (Supabase Storage temporal) con URLs firmadas.
 - **Realtime y notificaciones**: Supabase Realtime (presencia y cambios); escalar con Ably/Pusher si es necesario.
 - **Observabilidad y analítica**: Sentry (web/mobile/backend), PostHog (producto), OpenTelemetry → Axiom/Datadog (logs/tracing).
 - **Importador con IA**: onboarding de planes legacy (Excel/CSV/PDF legibles) con Gemini 2.5 (Flash/Pro) y revisión antes de publicar.
-- **Inteligencia Predictiva y Journaling (Gemini 3.0 Pro)**: Análisis de "Journal" del atleta/entrenador y generación de resúmenes semanales con insights profundos (patrones de fatiga, adherencia, psicología).
+- **Inteligencia Predictiva (Gemini 3.0 Pro)**: "Copiloto que Susurra". Alertas de sobreentrenamiento y sugerencias contextuales, no generación ciega.
 - **Métricas de Carga Avanzadas**: Motor de cálculo para ACWR (Acute:Chronic Workload Ratio), Monotonía, Strain, TRIMP y variabilidad.
-- **Dashboards del entrenador**: cumplimiento, cargas (interna/externa), PRs y riesgos (ACWR/monotonía/strain/HRV/sueño).
+- **Dashboards del entrenador**: "God View" para gestionar diversidad (Pro a Amateur) y conectar Micro con Macro.
 - **Integraciones salud/wearables**: Apple Health, Health Connect (Android), Garmin, Polar, Oura, WHOOP, Samsung, Huawei (futuro).
 - **Pagos**: Stripe Billing (+ Connect si hay marketplace de entrenadores) en v2 (futuro).
 
 ---
 
-## Propuesta de valor y objetivos
+## Propuesta de valor y objetivos (Ver PRODUCT_VISION.md)
 
-- **Coach como Arquitecto**: Herramientas robustas para crear ejercicios, subir videos propios, diseñar sesiones complejas y organizar librerías. Control manual total.
-- **Inteligencia Aumentada**: La IA no reemplaza al coach, lo potencia. Se encarga de lo que el humano no puede ver: tendencias ocultas, análisis de texto masivo y cálculos complejos.
-- Ser la interfaz principal del entrenador para planificar, asignar, comunicar y medir en un solo lugar.
-- Reemplazar Excel/Sheets/PDF/chats con flujos nativos rápidos, auditables y multi‑tenant.
-- Onboarding sin fricción de planes existentes mediante importador con IA (Gemini 2.5) y vista de revisión.
-- **Ecosistema Unificado (Single App)**: El entrenador tiene su "oficina" en la Web, pero lleva su "portapapeles inteligente" en el bolsillo (App Móvil en Modo Coach) para gestionar in-situ.
-- **Ciencia de Datos Aplicada**: Métricas de carga reales (ACWR, Strain) y predicción de riesgos, no solo "kilos levantados".
-- **Journaling Inteligente**: El atleta escribe notas libres; Gemini 3.0 Pro las analiza para detectar estados de ánimo, dolor oculto o patrones de conducta, generando resúmenes ejecutivos para el coach.
+- **El Diario Compartido**: Transformar la relación coach-atleta mediante transparencia radical y comunicación constante. La app es donde "ocurre la conversación".
+- **Línea de Tiempo (Timeline)**: El corazón de la experiencia. Una vista fluida de pasado (historia), presente (foco) y futuro (promesa).
+- **Journaling Activo**: No solo checkboxes. Feedback cualitativo (RPE, dolor, notas de voz, sensaciones) que da contexto a los datos duros.
+- **Coach como Mentor**: Herramientas que permiten "sentir el pulso" de los atletas rápidamente (quién necesita atención hoy) para actuar preventivamente.
+- **Historia Viva**: Permitir al atleta volver atrás en el tiempo y ver su evolución real (fotos, PRs, notas), validando su esfuerzo a largo plazo.
+- **Inteligencia Susurrada**: IA que detecta patrones sutiles (sueño vs rendimiento) y sugiere ajustes sin invadir la autoridad del coach.
 
 ## Arquitectura base
 
@@ -104,20 +102,21 @@ Este documento resume el enfoque técnico recomendado para construir la platafor
 - **ESLint**: eslint-config-next para best practices de Next.js.
 - **Subidas**: Cloudflare Stream/R2 con firmas temporales (futuro). Previsualizaciones y controles por rol.
 
-### Dashboards del entrenador
+### Dashboards del entrenador (The Coach's Cockpit)
 
-- Vista principal: cumplimiento por atleta/grupo, cargas interna (sRPE×duración/TRIMP) y externa, monotonía/strain, distribución por zonas, evolución de PRs y 1RM estimado.
-- Alertas y riesgos: ACWR configurable por ventanas, caídas de HRV, deterioro de sueño/recuperación y saltos de carga no planificados.
-- Drill‑down por atleta: línea de tiempo que cruza sesiones, métricas fisiológicas, PRs y feedback; comparativa plan vs. ejecución.
-- Herramientas de planificación: mapas de calor de adherencia y estancamientos; filtros por bloque/ciclo, patrón de movimiento y grupo muscular.
+- **Team Pulse (Pulso del Equipo)**: Vista principal. No solo cumplimiento, sino *sentimiento*. ¿Quién está fatigado (RPE alto)? ¿Quién reporto dolor? ¿Quién está "on fire" (PRs)? Priorización automática de atención.
+- **Timeline View (Vista de Línea de Tiempo)**:
+    - Drill-down por atleta que muestra la historia real.
+    - Cruce de variables: Sesiones completadas vs. Planificadas + Nivel de Energía (subjetivo) + Carga (objetiva).
+- **Riesgos y Oportunidades**: Alertas de "Burnout" silencioso (Monotonía alta + Sentimiento bajo) o ventanas de oportunidad para intensificar.
 
 ### Herramientas de Creación (Coach Tools)
 El entrenador tiene control granular absoluto sobre su librería y programación.
 
-- **Exercise Builder**:
-  - Creación manual de ejercicios con campos personalizados.
-  - **Media Management**: Subida directa de videos (desde móvil/web) o enlaces a YouTube/Vimeo. Asignación de thumbnails.
-  - Etiquetado profundo: Grupo muscular, patrón de movimiento, equipamiento, dificultad.
+- **Exercise Builder & Library**:
+  - Creación manual de ejercicios con flexibilidad total.
+  - **Media Management**: Subida directa de videos "caseros" (desde móvil) para correcciones técnicas específicas (Feedback audiovisual).
+  - "Combos Secretos": Guardar superseries o WODs propios como bloques reutilizables.
 - **Workout Designer**:
   - Interfaz "Drag & Drop" para construir sesiones.
   - Creación de bloques, superseries, circuitos y AMRAPs.
@@ -167,11 +166,13 @@ La IA no solo mira el pasado, **audita el futuro**.
 ### Estrategia Single App
 Hemos decidido unificar la experiencia en una sola base de código (`apps/mobile`) para maximizar la velocidad de desarrollo y consistencia.
 - **Role-Based UI**: La app detecta el rol (`coach` o `athlete`) al iniciar sesión.
-  - **Modo Atleta**: Foco en ejecución, logueo rápido, timer, feedback.
-  - **Modo Coach**:
+  - **Modo Atleta (The Companion)**:
+    - **Timeline Infinito**: Scroll al pasado (ver historia, fotos, PRs) y futuro (ver bloques próximos).
+    - **Journaling Flow**: Al terminar sesión, UI dedicada para capturar RPE, sentimiento y multimedia (video técnica/nota voz).
+  - **Modo Coach (The Mentor)**:
     - **Gestión On-the-Go**: Crear/editar ejercicios y sesiones desde el móvil.
-    - **Captura de Media**: Grabar y subir videos de técnica directamente a la librería del atleta o ejercicio.
-    - **Live Dashboard**: Ver quién está entrenando ahora y sus métricas en tiempo real.
+    - **Captura de Media**: Grabar videos de corrección y subirlos directo al "feed" del ejercicio del atleta.
+    - **Live Pulse**: Ver quién está entrenando y recibir notificaciones de feedback crítico.
 
 ### Stack implementado
 

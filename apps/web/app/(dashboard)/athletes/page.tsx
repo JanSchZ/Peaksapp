@@ -315,7 +315,7 @@ export default function AthletesPage() {
                     ))}
 
                     <button className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-border/50 rounded-xl bg-accent/5 hover:bg-accent/10 transition-colors h-full min-h-[200px]">
-                        <div className="h-12 w-12 rounded-full bg-background flex items-center justify-center mb-4 shadow-sm">
+                        <div className="h-12 w-12 rounded-full bg-background flex items-center justify-center mb-4 shadow-xs">
                             <Plus className="h-6 w-6 text-primary" />
                         </div>
                         <h3 className="font-medium">Create New Group</h3>

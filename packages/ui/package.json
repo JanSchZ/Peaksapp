@@ -5,7 +5,7 @@
   "types": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./styles.css": "./src/styles.css"
+    "./globals.css": "./src/globals.css"
   },
   "scripts": {
     "lint": "eslint ."
@@ -14,12 +14,12 @@
     "@radix-ui/react-slot": "^1.2.4",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
-    "lucide-react": "^0.344.0",
-    "tailwind-merge": "^2.2.1",
-    "tailwindcss-animate": "^1.0.7"
+    "lucide-react": "^0.556.0",
+    "tailwind-merge": "^2.5.5"
   },
   "devDependencies": {
-    "tailwindcss": "^3.4.1",
+    "@tailwindcss/postcss": "^4.1.17",
+    "tailwindcss": "^4.1.17",
     "typescript": "^5.3.3"
   }
 }

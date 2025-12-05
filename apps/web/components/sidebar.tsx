@@ -18,7 +18,7 @@ export function Sidebar() {
     return (
         <div className="flex h-full w-64 flex-col bg-card border-r border-border/50">
             <div className="flex h-16 items-center px-6 border-b border-border/50">
-                <h1 className="text-xl font-bold tracking-tight bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+                <h1 className="text-xl font-bold tracking-tight bg-linear-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
                     PEAKS
                 </h1>
             </div>

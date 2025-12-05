@@ -52,13 +52,14 @@ export async function saveSeasonPlan(data: any) {
                 end_date: new Date(macro.endDate),
             });
 
-            for (const meso of macro.mesocycles) {
+            for (const [index, meso] of macro.mesocycles.entries()) {
                 await db.insert(mesocycles).values({
                     id: meso.id,
                     macrocycle_id: macro.id,
                     name: meso.name,
-                    weeks: meso.weeks,
+                    weeks_count: meso.weeks || meso.weeks_count || 4,
                     focus: meso.focus,
+                    order_index: index,
                 });
             }
         }

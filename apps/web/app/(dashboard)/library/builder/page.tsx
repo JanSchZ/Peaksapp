@@ -97,7 +97,7 @@ export default function WorkoutBuilderPage() {
     return (
         <div className="max-w-5xl mx-auto space-y-8 pb-20">
             {/* Header */}
-            <div className="flex items-center justify-between sticky top-0 bg-background/95 backdrop-blur z-10 py-4 border-b border-border/50">
+            <div className="flex items-center justify-between sticky top-0 bg-background/95 backdrop-blur-sm z-10 py-4 border-b border-border/50">
                 <div className="flex items-center gap-4">
                     <Link href="/library">
                         <Button variant="ghost" size="icon">
