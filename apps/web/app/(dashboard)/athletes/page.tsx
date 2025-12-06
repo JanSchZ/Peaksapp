@@ -2,346 +2,196 @@
 
 import { useState } from 'react';
 import { Button, Card, Input } from "@peaks/ui";
-import { Search, Plus, MoreHorizontal, Mail, Phone, Calendar, ArrowUpRight, TrendingUp, AlertCircle, Users, UserPlus } from "lucide-react";
-import Link from 'next/link';
+import {
+    Search, Plus, MoreHorizontal,
+    Users, UserPlus, Flame, MessageSquare,
+    Send, ChevronRight
+} from "lucide-react";
 
-// Mock Data
 const ATHLETES = [
-    {
-        id: '1',
-        name: 'Alex Johnson',
-        email: 'alex.j@example.com',
-        status: 'Active',
-        plan: 'Road to Olympics',
-        phase: 'Preparatory',
-        compliance: 92,
-        lastActive: '2 hours ago',
-        avatar: 'AJ',
-        trend: 'up'
-    },
-    {
-        id: '2',
-        name: 'Sarah Williams',
-        email: 'sarah.w@example.com',
-        status: 'Active',
-        plan: 'Marathon Build',
-        phase: 'Base Building',
-        compliance: 88,
-        lastActive: '1 day ago',
-        avatar: 'SW',
-        trend: 'stable'
-    },
-    {
-        id: '3',
-        name: 'Mike Chen',
-        email: 'mike.c@example.com',
-        status: 'Injured',
-        plan: 'Rehab Protocol',
-        phase: 'Recovery',
-        compliance: 100,
-        lastActive: '3 days ago',
-        avatar: 'MC',
-        trend: 'down'
-    },
-    {
-        id: '4',
-        name: 'Emma Davis',
-        email: 'emma.d@example.com',
-        status: 'Active',
-        plan: 'Powerlifting Meet',
-        phase: 'Peaking',
-        compliance: 95,
-        lastActive: '5 hours ago',
-        avatar: 'ED',
-        trend: 'up'
-    },
-    {
-        id: '5',
-        name: 'James Wilson',
-        email: 'james.w@example.com',
-        status: 'Paused',
-        plan: 'Off-Season',
-        phase: 'Rest',
-        compliance: 0,
-        lastActive: '1 week ago',
-        avatar: 'JW',
-        trend: 'stable'
-    }
+    { id: '1', name: 'Alex Johnson', group: 'Elite', avatar: 'AJ', status: 'Active', streak: 12, lastRPE: 7, weeklyCompliance: [true, true, true, true, false, null, null], nextSession: 'Upper Body' },
+    { id: '2', name: 'Sarah Williams', group: 'Marathon', avatar: 'SW', status: 'Active', streak: 8, lastRPE: 9, weeklyCompliance: [true, true, false, true, true, null, null], nextSession: 'Long Run' },
+    { id: '3', name: 'Mike Chen', group: 'Rehab', avatar: 'MC', status: 'Injured', streak: 0, lastRPE: null, weeklyCompliance: [true, true, true, null, null, null, null], nextSession: 'Mobility' },
+    { id: '4', name: 'Emma Davis', group: 'Powerlifting', avatar: 'ED', status: 'Active', streak: 21, lastRPE: 8, weeklyCompliance: [true, true, true, true, true, null, null], nextSession: 'Max Effort' },
+    { id: '5', name: 'James Wilson', group: 'General', avatar: 'JW', status: 'Paused', streak: 0, lastRPE: null, weeklyCompliance: [false, false, false, null, null, null, null], nextSession: null },
 ];
 
 const GROUPS = [
-    {
-        id: '1',
-        name: 'Marathon Squad',
-        members: 12,
-        program: 'Marathon Build 2025',
-        coach: 'Coach Jan',
-        nextSession: 'Long Run (Sunday)'
-    },
-    {
-        id: '2',
-        name: 'Powerlifting Team',
-        members: 8,
-        program: 'Strength Block A',
-        coach: 'Coach Jan',
-        nextSession: 'Max Effort Lower'
-    },
-    {
-        id: '3',
-        name: 'Onboarding',
-        members: 5,
-        program: 'Intro to Peaks',
-        coach: 'System',
-        nextSession: 'Assessment'
-    }
+    { id: '1', name: 'Elite Squad', members: 4, compliance: 95 },
+    { id: '2', name: 'Marathon', members: 8, compliance: 88 },
+    { id: '3', name: 'Powerlifting', members: 6, compliance: 92 },
+    { id: '4', name: 'Rehab', members: 3, compliance: 100 },
 ];
 
 export default function AthletesPage() {
     const [activeTab, setActiveTab] = useState<'athletes' | 'groups'>('athletes');
     const [searchQuery, setSearchQuery] = useState('');
 
-    const filteredAthletes = ATHLETES.filter(athlete =>
-        athlete.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        athlete.email.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const filteredAthletes = ATHLETES.filter(a => a.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
     return (
-        <div className="space-y-8">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="space-y-5">
+            {/* Header */}
+            <div className="flex items-center justify-between pb-4 border-b border-border">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Roster</h1>
-                    <p className="text-muted-foreground">Manage your athletes and training groups.</p>
+                    <h1 className="text-2xl font-semibold text-foreground">Roster</h1>
+                    <p className="text-sm text-muted-foreground mt-0.5">Athletes and training groups</p>
                 </div>
                 <div className="flex gap-2">
-                    <Button variant="outline">
-                        <UserPlus className="mr-2 h-4 w-4" /> Invite Athlete
+                    <Button variant="outline" size="sm" className="border-border text-muted-foreground hover:bg-secondary">
+                        <UserPlus className="mr-1.5 h-3.5 w-3.5" /> Invite
                     </Button>
-                    <Button>
-                        <Plus className="mr-2 h-4 w-4" /> Create Group
+                    <Button size="sm" className="bg-teal-600 hover:bg-teal-700 text-white">
+                        <Plus className="mr-1.5 h-3.5 w-3.5" /> New Group
                     </Button>
                 </div>
             </div>
 
-            {/* Tabs */}
-            <div className="border-b border-border/50">
-                <div className="flex gap-6">
-                    <button
-                        onClick={() => setActiveTab('athletes')}
-                        className={`pb-3 text-sm font-medium border-b-2 transition-colors ${activeTab === 'athletes'
-                                ? 'border-primary text-primary'
-                                : 'border-transparent text-muted-foreground hover:text-foreground'
-                            }`}
-                    >
-                        All Athletes
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('groups')}
-                        className={`pb-3 text-sm font-medium border-b-2 transition-colors ${activeTab === 'groups'
-                                ? 'border-primary text-primary'
-                                : 'border-transparent text-muted-foreground hover:text-foreground'
-                            }`}
-                    >
-                        Groups & Teams
-                    </button>
+            {/* Tabs + Search */}
+            <div className="flex items-center justify-between">
+                <div className="flex gap-0.5 bg-secondary p-0.5 rounded border border-border">
+                    {['athletes', 'groups'].map((tab) => (
+                        <button
+                            key={tab}
+                            onClick={() => setActiveTab(tab as 'athletes' | 'groups')}
+                            className={`px-3 py-1.5 text-xs font-medium rounded transition-all capitalize ${activeTab === tab
+                                ? 'bg-white text-foreground shadow-sm'
+                                : 'text-muted-foreground hover:text-foreground'
+                                }`}
+                        >
+                            {tab}
+                        </button>
+                    ))}
+                </div>
+                <div className="relative w-56">
+                    <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                    <Input
+                        placeholder="Search..."
+                        className="pl-8 h-8 text-sm bg-white border-border text-foreground placeholder:text-muted-foreground"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
                 </div>
             </div>
 
             {activeTab === 'athletes' ? (
-                <>
-                    {/* Stats Overview */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <Card className="p-6 border-border/50 bg-card/50">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-sm font-medium text-muted-foreground">Total Athletes</p>
-                                    <h2 className="text-3xl font-bold mt-2">{ATHLETES.length}</h2>
-                                </div>
-                                <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-                                    <TrendingUp className="h-5 w-5 text-primary" />
-                                </div>
-                            </div>
-                            <div className="mt-4 flex items-center text-xs text-green-500">
-                                <ArrowUpRight className="h-3 w-3 mr-1" />
-                                <span>+2 this month</span>
-                            </div>
-                        </Card>
-                        <Card className="p-6 border-border/50 bg-card/50">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-sm font-medium text-muted-foreground">Average Compliance</p>
-                                    <h2 className="text-3xl font-bold mt-2">
-                                        {Math.round(ATHLETES.reduce((acc, curr) => acc + curr.compliance, 0) / ATHLETES.length)}%
-                                    </h2>
-                                </div>
-                                <div className="h-10 w-10 rounded-full bg-green-500/10 flex items-center justify-center">
-                                    <ActivityIcon className="h-5 w-5 text-green-500" />
-                                </div>
-                            </div>
-                            <div className="mt-4 flex items-center text-xs text-muted-foreground">
-                                <span>Last 7 days</span>
-                            </div>
-                        </Card>
-                        <Card className="p-6 border-border/50 bg-card/50">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-sm font-medium text-muted-foreground">Requires Attention</p>
-                                    <h2 className="text-3xl font-bold mt-2">
-                                        {ATHLETES.filter(a => a.status === 'Injured' || a.compliance < 80).length}
-                                    </h2>
-                                </div>
-                                <div className="h-10 w-10 rounded-full bg-red-500/10 flex items-center justify-center">
-                                    <AlertCircle className="h-5 w-5 text-red-500" />
-                                </div>
-                            </div>
-                            <div className="mt-4 flex items-center text-xs text-red-500">
-                                <span>Low compliance or injured</span>
-                            </div>
-                        </Card>
+                <div className="space-y-1">
+                    {/* Table Header */}
+                    <div className="grid grid-cols-[2fr,1fr,1fr,1fr,120px] gap-3 px-3 py-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                        <span>Athlete</span>
+                        <span>Status</span>
+                        <span>Week</span>
+                        <span>RPE</span>
+                        <span className="text-right">Actions</span>
                     </div>
 
-                    {/* Search and Filter */}
-                    <div className="flex items-center gap-4">
-                        <div className="relative flex-1 max-w-md">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                            <Input
-                                placeholder="Search athletes..."
-                                className="pl-10 bg-card/50 border-border/50"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                            />
+                    {filteredAthletes.map((athlete) => (
+                        <div
+                            key={athlete.id}
+                            className="grid grid-cols-[2fr,1fr,1fr,1fr,120px] gap-3 items-center card-industrial rounded p-3 hover:border-teal-500/30 transition-colors cursor-pointer group"
+                        >
+                            {/* Athlete */}
+                            <div className="flex items-center gap-2.5">
+                                <div className={`h-8 w-8 rounded flex items-center justify-center text-xs font-bold ${athlete.status === 'Active' ? 'bg-teal-50 text-teal-600 border border-teal-100' :
+                                    athlete.status === 'Injured' ? 'bg-red-50 text-red-600 border border-red-100' :
+                                        'bg-secondary text-muted-foreground border border-border'
+                                    }`}>
+                                    {athlete.avatar}
+                                </div>
+                                <div>
+                                    <div className="flex items-center gap-1.5">
+                                        <span className="text-sm font-medium text-foreground">{athlete.name}</span>
+                                        {athlete.streak >= 7 && (
+                                            <span className="flex items-center gap-0.5 text-[10px] text-amber-500">
+                                                <Flame className="h-3 w-3" />{athlete.streak}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div className="text-xs text-muted-foreground">{athlete.group}</div>
+                                </div>
+                            </div>
+
+                            {/* Status */}
+                            <div>
+                                <span className={`inline-flex px-2 py-0.5 rounded text-xs font-medium ${athlete.status === 'Active' ? 'bg-teal-50 text-teal-600' :
+                                    athlete.status === 'Injured' ? 'bg-red-50 text-red-600' :
+                                        'bg-secondary text-muted-foreground'
+                                    }`}>
+                                    {athlete.status}
+                                </span>
+                            </div>
+
+                            {/* Week Timeline */}
+                            <div className="flex items-center gap-0.5">
+                                {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((_, i) => (
+                                    <div
+                                        key={i}
+                                        className={`h-5 w-5 rounded-sm flex items-center justify-center text-[10px] font-medium ${athlete.weeklyCompliance[i] === true ? 'bg-teal-50 text-teal-600' :
+                                            athlete.weeklyCompliance[i] === false ? 'bg-red-50 text-red-600' :
+                                                'bg-secondary text-muted-foreground/30'
+                                            }`}
+                                    >
+                                        {athlete.weeklyCompliance[i] === true ? '✓' :
+                                            athlete.weeklyCompliance[i] === false ? '✗' : '—'}
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* RPE */}
+                            <div>
+                                <span className={`text-sm font-semibold ${athlete.lastRPE === null ? 'text-muted-foreground' :
+                                    athlete.lastRPE >= 9 ? 'text-red-500' :
+                                        athlete.lastRPE >= 7 ? 'text-amber-500' :
+                                            'text-teal-600'
+                                    }`}>
+                                    {athlete.lastRPE ?? '—'}
+                                </span>
+                            </div>
+
+                            {/* Actions */}
+                            <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button className="h-7 w-7 rounded flex items-center justify-center text-muted-foreground hover:bg-secondary hover:text-teal-600 transition-colors">
+                                    <MessageSquare className="h-3.5 w-3.5" />
+                                </button>
+                                <button className="h-7 w-7 rounded flex items-center justify-center text-muted-foreground hover:bg-secondary hover:text-teal-600 transition-colors">
+                                    <Send className="h-3.5 w-3.5" />
+                                </button>
+                                <button className="h-7 w-7 rounded flex items-center justify-center text-muted-foreground hover:bg-secondary transition-colors">
+                                    <MoreHorizontal className="h-3.5 w-3.5" />
+                                </button>
+                            </div>
                         </div>
-                    </div>
-
-                    {/* Athletes List */}
-                    <div className="rounded-xl border border-border/50 bg-card/50 overflow-hidden">
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-sm">
-                                <thead>
-                                    <tr className="border-b border-border/50 bg-muted/50">
-                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Athlete</th>
-                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Status</th>
-                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Current Plan</th>
-                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Compliance</th>
-                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Last Active</th>
-                                        <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {filteredAthletes.map((athlete) => (
-                                        <tr key={athlete.id} className="border-b border-border/50 last:border-0 hover:bg-muted/50 transition-colors">
-                                            <td className="p-4 align-middle">
-                                                <div className="flex items-center gap-3">
-                                                    <div className="h-10 w-10 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-500 font-bold">
-                                                        {athlete.avatar}
-                                                    </div>
-                                                    <div>
-                                                        <div className="font-medium">{athlete.name}</div>
-                                                        <div className="text-xs text-muted-foreground">{athlete.email}</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td className="p-4 align-middle">
-                                                <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${athlete.status === 'Active' ? 'bg-green-500/10 text-green-500' :
-                                                        athlete.status === 'Injured' ? 'bg-red-500/10 text-red-500' :
-                                                            'bg-yellow-500/10 text-yellow-500'
-                                                    }`}>
-                                                    {athlete.status}
-                                                </span>
-                                            </td>
-                                            <td className="p-4 align-middle">
-                                                <div className="font-medium">{athlete.plan}</div>
-                                                <div className="text-xs text-muted-foreground">{athlete.phase}</div>
-                                            </td>
-                                            <td className="p-4 align-middle">
-                                                <div className="flex items-center gap-2">
-                                                    <div className="h-2 w-24 rounded-full bg-muted overflow-hidden">
-                                                        <div
-                                                            className={`h-full rounded-full ${athlete.compliance >= 90 ? 'bg-green-500' :
-                                                                    athlete.compliance >= 75 ? 'bg-yellow-500' :
-                                                                        'bg-red-500'
-                                                                }`}
-                                                            style={{ width: `${athlete.compliance}%` }}
-                                                        />
-                                                    </div>
-                                                    <span className="text-xs font-medium">{athlete.compliance}%</span>
-                                                </div>
-                                            </td>
-                                            <td className="p-4 align-middle text-muted-foreground">
-                                                {athlete.lastActive}
-                                            </td>
-                                            <td className="p-4 align-middle text-right">
-                                                <div className="flex items-center justify-end gap-2">
-                                                    <Button variant="ghost" size="icon" className="h-8 w-8">
-                                                        <Mail className="h-4 w-4" />
-                                                    </Button>
-                                                    <Button variant="ghost" size="icon" className="h-8 w-8">
-                                                        <MoreHorizontal className="h-4 w-4" />
-                                                    </Button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </>
-            ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {GROUPS.map((group) => (
-                        <Card key={group.id} className="p-6 border-border/50 bg-card/50 hover:border-primary/50 transition-colors cursor-pointer group">
-                            <div className="flex justify-between items-start mb-4">
-                                <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                                    <Users className="h-6 w-6" />
-                                </div>
-                                <Button variant="ghost" size="icon" className="h-8 w-8">
-                                    <MoreHorizontal className="h-4 w-4" />
-                                </Button>
-                            </div>
-                            <h3 className="text-lg font-bold mb-1 group-hover:text-primary transition-colors">{group.name}</h3>
-                            <p className="text-sm text-muted-foreground mb-4">{group.members} Athletes</p>
-
-                            <div className="space-y-3 pt-4 border-t border-border/50">
-                                <div className="flex justify-between text-sm">
-                                    <span className="text-muted-foreground">Program</span>
-                                    <span className="font-medium">{group.program}</span>
-                                </div>
-                                <div className="flex justify-between text-sm">
-                                    <span className="text-muted-foreground">Next Session</span>
-                                    <span className="font-medium">{group.nextSession}</span>
-                                </div>
-                            </div>
-                        </Card>
                     ))}
-
-                    <button className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-border/50 rounded-xl bg-accent/5 hover:bg-accent/10 transition-colors h-full min-h-[200px]">
-                        <div className="h-12 w-12 rounded-full bg-background flex items-center justify-center mb-4 shadow-xs">
-                            <Plus className="h-6 w-6 text-primary" />
+                </div>
+            ) : (
+                <div className="grid grid-cols-4 gap-3">
+                    {GROUPS.map((group) => (
+                        <div key={group.id} className="card-industrial rounded-lg p-4 hover:border-teal-500/30 transition-colors cursor-pointer group">
+                            <div className="flex items-start justify-between mb-3">
+                                <div className="h-9 w-9 rounded bg-teal-50 flex items-center justify-center border border-teal-100">
+                                    <Users className="h-4 w-4 text-teal-600" />
+                                </div>
+                                <button className="h-6 w-6 rounded flex items-center justify-center text-muted-foreground hover:bg-secondary">
+                                    <MoreHorizontal className="h-3.5 w-3.5" />
+                                </button>
+                            </div>
+                            <h3 className="font-medium text-foreground group-hover:text-teal-600 transition-colors">{group.name}</h3>
+                            <p className="text-xs text-muted-foreground mt-0.5">{group.members} athletes</p>
+                            <div className="flex items-center justify-between mt-3 pt-3 border-t border-muted">
+                                <span className="text-xs text-muted-foreground">Compliance</span>
+                                <span className={`text-xs font-semibold ${group.compliance >= 90 ? 'text-teal-600' : group.compliance >= 70 ? 'text-amber-500' : 'text-red-500'
+                                    }`}>
+                                    {group.compliance}%
+                                </span>
+                            </div>
                         </div>
-                        <h3 className="font-medium">Create New Group</h3>
-                        <p className="text-sm text-muted-foreground mt-1">Organize athletes by goal or level</p>
+                    ))}
+                    <button className="flex flex-col items-center justify-center p-4 border border-dashed border-border rounded-lg bg-secondary/30 hover:bg-secondary hover:border-muted-foreground transition-all">
+                        <Plus className="h-5 w-5 text-muted-foreground mb-1" />
+                        <span className="text-xs text-muted-foreground">New Group</span>
                     </button>
                 </div>
             )}
         </div>
     );
-}
-
-function ActivityIcon(props: any) {
-    return (
-        <svg
-            {...props}
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-        >
-            <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-        </svg>
-    )
 }

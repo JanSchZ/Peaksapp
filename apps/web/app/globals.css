@@ -1,69 +1,85 @@
 /* Import the shared UI styles which include Tailwind v4 setup */
 @import '../../../packages/ui/src/globals.css';
 
-/* Add any app-specific CSS variables for light/dark mode here */
+/* Font Configuration */
+@theme {
+  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, monospace;
+}
+
+/* ===== INDUSTRIAL LIGHT THEME ===== */
+/* Technical, clean, high contrast - Blueprint / Lab aesthetic */
+
 @layer base {
   :root {
-    /* Zinc Palette (Light Mode - Default) */
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
+    /* Industrial Light Base - "Technical White" */
+    --background: 210 20% 98%;
+    /* Very cool off-white, almost paper */
+    --foreground: 220 13% 10%;
+    /* Deep slate text, high legibility */
 
     --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
+    /* Pure white cards */
+    --card-foreground: 220 13% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
+    --popover-foreground: 220 13% 10%;
 
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
+    /* Primary - Teal/Cyan (Industrial Accent) - Slightly darker for contrast on white */
+    --primary: 175 80% 40%;
+    /* Teal - sharp and professional */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
+    /* Secondary - Cool Grey */
+    --secondary: 210 20% 96%;
+    --secondary-foreground: 220 13% 30%;
 
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
+    /* Muted - Divider lines and subtle backgrounds */
+    --muted: 220 14% 94%;
+    --muted-foreground: 220 8% 40%;
 
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
+    /* Accent - Copper/Orange */
+    --accent: 25 90% 50%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
+    /* Destructive */
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 5.9% 10%;
+    /* Borders - Crisp technical lines */
+    --border: 220 13% 90%;
+    --input: 220 13% 90%;
+    --ring: 175 80% 40%;
 
-    --radius: 0.5rem;
+    --radius: 0.3rem;
+    /* Sharper corners for industrial feel */
+  }
+}
+
+/* ===== CUSTOM UTILITIES ===== */
+@layer utilities {
+
+  /* Industrial card light style - Crisp borders, subtle shadow */
+  .card-industrial {
+    background: white;
+    border: 1px solid hsl(220 13% 88%);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   }
 
-  .dark {
-    /* Zinc Palette (Dark Mode - Premium) */
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
+  /* Status colors */
+  .status-success {
+    color: hsl(160 80% 35%);
+  }
 
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
+  .status-warning {
+    color: hsl(35 90% 40%);
+  }
 
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
+  .status-danger {
+    color: hsl(0 75% 50%);
+  }
 
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
+  .status-info {
+    color: hsl(200 80% 40%);
   }
 }

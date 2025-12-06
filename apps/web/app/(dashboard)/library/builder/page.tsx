@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Button, Card, Input, Badge } from "@peaks/ui";
-import { ArrowLeft, Plus, Save, Trash2, GripVertical, Clock, Dumbbell, MoreHorizontal } from "lucide-react";
+import { Button, Card, Input } from "@peaks/ui";
+import { ArrowLeft, Plus, Save, Trash2, GripVertical, Dumbbell } from "lucide-react";
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -31,9 +31,7 @@ export default function WorkoutBuilderPage() {
         const newBlock: ExerciseBlock = {
             id: Math.random().toString(36).substr(2, 9),
             exerciseName: '',
-            sets: [
-                { id: Math.random().toString(36).substr(2, 9), type: 'working', reps: '10', weight: '', rpe: '8', rest: '90s' }
-            ],
+            sets: [{ id: Math.random().toString(36).substr(2, 9), type: 'working', reps: '10', weight: '', rpe: '8', rest: '90s' }],
             notes: ''
         };
         setBlocks([...blocks, newBlock]);
@@ -43,10 +41,7 @@ export default function WorkoutBuilderPage() {
         setBlocks(blocks.map(block => {
             if (block.id === blockId) {
                 const lastSet = block.sets[block.sets.length - 1];
-                return {
-                    ...block,
-                    sets: [...block.sets, { ...lastSet, id: Math.random().toString(36).substr(2, 9) }]
-                };
+                return { ...block, sets: [...block.sets, { ...lastSet, id: Math.random().toString(36).substr(2, 9) }] };
             }
             return block;
         }));
@@ -55,10 +50,7 @@ export default function WorkoutBuilderPage() {
     const removeSet = (blockId: string, setId: string) => {
         setBlocks(blocks.map(block => {
             if (block.id === blockId) {
-                return {
-                    ...block,
-                    sets: block.sets.filter(s => s.id !== setId)
-                };
+                return { ...block, sets: block.sets.filter(s => s.id !== setId) };
             }
             return block;
         }));
@@ -68,203 +60,159 @@ export default function WorkoutBuilderPage() {
         setBlocks(blocks.filter(b => b.id !== blockId));
     };
 
-    const updateBlock = (blockId: string, field: keyof ExerciseBlock, value: any) => {
-        setBlocks(blocks.map(block => {
-            if (block.id === blockId) {
-                return { ...block, [field]: value };
-            }
-            return block;
-        }));
+    const updateBlock = (blockId: string, field: keyof ExerciseBlock, value: string) => {
+        setBlocks(blocks.map(block => block.id === blockId ? { ...block, [field]: value } : block));
     };
 
-    const updateSet = (blockId: string, setId: string, field: keyof Set, value: any) => {
+    const updateSet = (blockId: string, setId: string, field: keyof Set, value: string) => {
         setBlocks(blocks.map(block => {
             if (block.id === blockId) {
-                return {
-                    ...block,
-                    sets: block.sets.map(set => {
-                        if (set.id === setId) {
-                            return { ...set, [field]: value };
-                        }
-                        return set;
-                    })
-                };
+                return { ...block, sets: block.sets.map(set => set.id === setId ? { ...set, [field]: value } : set) };
             }
             return block;
         }));
     };
 
     return (
-        <div className="max-w-5xl mx-auto space-y-8 pb-20">
+        <div className="max-w-4xl mx-auto space-y-5 pb-20">
             {/* Header */}
-            <div className="flex items-center justify-between sticky top-0 bg-background/95 backdrop-blur-sm z-10 py-4 border-b border-border/50">
-                <div className="flex items-center gap-4">
+            <div className="flex items-center justify-between pb-4 border-b border-[hsl(220,10%,18%)]">
+                <div className="flex items-center gap-3">
                     <Link href="/library">
-                        <Button variant="ghost" size="icon">
-                            <ArrowLeft className="h-5 w-5" />
-                        </Button>
+                        <button className="h-8 w-8 rounded flex items-center justify-center text-[hsl(220,8%,50%)] hover:bg-[hsl(220,13%,14%)]">
+                            <ArrowLeft className="h-4 w-4" />
+                        </button>
                     </Link>
                     <div>
                         <Input
                             value={workoutName}
                             onChange={(e) => setWorkoutName(e.target.value)}
-                            className="text-xl font-bold border-none bg-transparent px-0 h-auto focus-visible:ring-0 placeholder:text-muted-foreground/50"
+                            className="text-lg font-semibold border-none bg-transparent px-0 h-auto focus-visible:ring-0 text-[hsl(40,15%,90%)]"
                             placeholder="Workout Name"
                         />
-                        <p className="text-sm text-muted-foreground">Design your workout session</p>
+                        <p className="text-xs text-[hsl(220,8%,45%)]">Build your session</p>
                     </div>
                 </div>
                 <div className="flex gap-2">
-                    <Button variant="outline">Discard</Button>
-                    <Button onClick={() => router.push('/library')}>
-                        <Save className="mr-2 h-4 w-4" /> Save Workout
+                    <Link href="/library">
+                        <Button variant="outline" size="sm" className="border-[hsl(220,10%,22%)] text-[hsl(220,8%,60%)]">Cancel</Button>
+                    </Link>
+                    <Button size="sm" className="bg-teal-600 hover:bg-teal-700" onClick={() => router.push('/library')}>
+                        <Save className="mr-1.5 h-3.5 w-3.5" /> Save
                     </Button>
                 </div>
             </div>
 
             {/* Content */}
-            <div className="space-y-6">
-                {blocks.length === 0 ? (
-                    <div className="text-center py-20 border-2 border-dashed border-border/50 rounded-xl bg-accent/5">
-                        <Dumbbell className="h-12 w-12 mx-auto text-muted-foreground mb-4 opacity-50" />
-                        <h3 className="text-lg font-medium">Start Building</h3>
-                        <p className="text-muted-foreground mb-6">Add your first exercise to this workout.</p>
-                        <Button onClick={addBlock}>
-                            <Plus className="mr-2 h-4 w-4" /> Add Exercise
-                        </Button>
-                    </div>
-                ) : (
-                    <div className="space-y-6">
-                        {blocks.map((block, index) => (
-                            <Card key={block.id} className="p-6 border-border/50 bg-card/50 relative group">
-                                <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary/50 rounded-l-lg opacity-0 group-hover:opacity-100 transition-opacity" />
-
-                                <div className="flex items-start gap-4 mb-6">
-                                    <div className="mt-2 cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground">
-                                        <GripVertical className="h-5 w-5" />
-                                    </div>
-                                    <div className="flex-1 space-y-4">
-                                        <div className="flex gap-4">
-                                            <div className="flex-1">
-                                                <label className="text-xs font-medium text-muted-foreground mb-1 block">Exercise</label>
-                                                <Input
-                                                    value={block.exerciseName}
-                                                    onChange={(e) => updateBlock(block.id, 'exerciseName', e.target.value)}
-                                                    placeholder="e.g. Back Squat"
-                                                    className="font-medium"
-                                                />
-                                            </div>
-                                            <div className="w-1/3">
-                                                <label className="text-xs font-medium text-muted-foreground mb-1 block">Notes</label>
-                                                <Input
-                                                    value={block.notes}
-                                                    onChange={(e) => updateBlock(block.id, 'notes', e.target.value)}
-                                                    placeholder="Tempo, cues, etc."
-                                                />
-                                            </div>
-                                        </div>
-
-                                        {/* Sets Table */}
-                                        <div className="rounded-lg border border-border/50 overflow-hidden">
-                                            <table className="w-full text-sm">
-                                                <thead className="bg-muted/30">
-                                                    <tr>
-                                                        <th className="px-4 py-2 text-left font-medium text-muted-foreground w-16">Set</th>
-                                                        <th className="px-4 py-2 text-left font-medium text-muted-foreground">Type</th>
-                                                        <th className="px-4 py-2 text-left font-medium text-muted-foreground">Reps</th>
-                                                        <th className="px-4 py-2 text-left font-medium text-muted-foreground">Weight</th>
-                                                        <th className="px-4 py-2 text-left font-medium text-muted-foreground">RPE</th>
-                                                        <th className="px-4 py-2 text-left font-medium text-muted-foreground">Rest</th>
-                                                        <th className="w-10"></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody className="divide-y divide-border/50">
-                                                    {block.sets.map((set, setIndex) => (
-                                                        <tr key={set.id} className="group/row hover:bg-muted/20">
-                                                            <td className="px-4 py-2 font-medium text-muted-foreground">{setIndex + 1}</td>
-                                                            <td className="px-4 py-2">
-                                                                <select
-                                                                    className="bg-transparent border-none focus:ring-0 text-sm p-0 w-full"
-                                                                    value={set.type}
-                                                                    onChange={(e) => updateSet(block.id, set.id, 'type', e.target.value)}
-                                                                >
-                                                                    <option value="working">Working</option>
-                                                                    <option value="warmup">Warmup</option>
-                                                                    <option value="drop">Drop Set</option>
-                                                                </select>
-                                                            </td>
-                                                            <td className="px-4 py-2">
-                                                                <input
-                                                                    className="bg-transparent border-none focus:ring-0 text-sm p-0 w-full"
-                                                                    value={set.reps}
-                                                                    onChange={(e) => updateSet(block.id, set.id, 'reps', e.target.value)}
-                                                                />
-                                                            </td>
-                                                            <td className="px-4 py-2">
-                                                                <input
-                                                                    className="bg-transparent border-none focus:ring-0 text-sm p-0 w-full"
-                                                                    value={set.weight}
-                                                                    placeholder="-"
-                                                                    onChange={(e) => updateSet(block.id, set.id, 'weight', e.target.value)}
-                                                                />
-                                                            </td>
-                                                            <td className="px-4 py-2">
-                                                                <input
-                                                                    className="bg-transparent border-none focus:ring-0 text-sm p-0 w-full"
-                                                                    value={set.rpe}
-                                                                    placeholder="-"
-                                                                    onChange={(e) => updateSet(block.id, set.id, 'rpe', e.target.value)}
-                                                                />
-                                                            </td>
-                                                            <td className="px-4 py-2">
-                                                                <input
-                                                                    className="bg-transparent border-none focus:ring-0 text-sm p-0 w-full"
-                                                                    value={set.rest}
-                                                                    onChange={(e) => updateSet(block.id, set.id, 'rest', e.target.value)}
-                                                                />
-                                                            </td>
-                                                            <td className="px-4 py-2 text-right">
-                                                                <button
-                                                                    onClick={() => removeSet(block.id, set.id)}
-                                                                    className="text-muted-foreground hover:text-destructive opacity-0 group-hover/row:opacity-100 transition-opacity"
-                                                                >
-                                                                    <Trash2 className="h-4 w-4" />
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
-                                            <div className="bg-muted/10 p-2 border-t border-border/50">
-                                                <Button
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    className="w-full text-xs h-8"
-                                                    onClick={() => addSet(block.id)}
-                                                >
-                                                    <Plus className="h-3 w-3 mr-2" /> Add Set
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        className="text-muted-foreground hover:text-destructive"
-                                        onClick={() => removeBlock(block.id)}
-                                    >
-                                        <Trash2 className="h-4 w-4" />
-                                    </Button>
+            {blocks.length === 0 ? (
+                <div className="text-center py-16 card-industrial rounded-lg">
+                    <Dumbbell className="h-10 w-10 mx-auto text-[hsl(220,8%,25%)] mb-3" />
+                    <h3 className="text-sm font-medium text-[hsl(40,15%,80%)]">Start Building</h3>
+                    <p className="text-xs text-[hsl(220,8%,45%)] mb-4">Add your first exercise</p>
+                    <Button size="sm" onClick={addBlock} className="bg-teal-600 hover:bg-teal-700">
+                        <Plus className="mr-1.5 h-3.5 w-3.5" /> Add Exercise
+                    </Button>
+                </div>
+            ) : (
+                <div className="space-y-4">
+                    {blocks.map((block, index) => (
+                        <div key={block.id} className="card-industrial rounded-lg p-4 group">
+                            <div className="flex items-start gap-3 mb-4">
+                                <div className="mt-2 cursor-grab text-[hsl(220,8%,35%)] hover:text-[hsl(220,8%,55%)]">
+                                    <GripVertical className="h-4 w-4" />
                                 </div>
-                            </Card>
-                        ))}
+                                <div className="flex-1 grid grid-cols-3 gap-3">
+                                    <div className="col-span-2 space-y-1">
+                                        <label className="text-[10px] text-[hsl(220,8%,45%)] uppercase tracking-wider">Exercise</label>
+                                        <Input
+                                            value={block.exerciseName}
+                                            onChange={(e) => updateBlock(block.id, 'exerciseName', e.target.value)}
+                                            placeholder="e.g. Back Squat"
+                                            className="h-8 text-sm bg-[hsl(220,13%,10%)] border-[hsl(220,10%,20%)] text-[hsl(40,15%,88%)]"
+                                        />
+                                    </div>
+                                    <div className="space-y-1">
+                                        <label className="text-[10px] text-[hsl(220,8%,45%)] uppercase tracking-wider">Notes</label>
+                                        <Input
+                                            value={block.notes}
+                                            onChange={(e) => updateBlock(block.id, 'notes', e.target.value)}
+                                            placeholder="Tempo, cues..."
+                                            className="h-8 text-sm bg-[hsl(220,13%,10%)] border-[hsl(220,10%,20%)] text-[hsl(40,15%,88%)]"
+                                        />
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={() => removeBlock(block.id)}
+                                    className="h-7 w-7 rounded flex items-center justify-center text-[hsl(220,8%,40%)] hover:text-red-400 hover:bg-red-500/10"
+                                >
+                                    <Trash2 className="h-3.5 w-3.5" />
+                                </button>
+                            </div>
 
-                        <Button onClick={addBlock} variant="outline" className="w-full py-8 border-dashed">
-                            <Plus className="mr-2 h-4 w-4" /> Add Exercise
-                        </Button>
-                    </div>
-                )}
-            </div>
+                            {/* Sets Table */}
+                            <div className="rounded border border-[hsl(220,10%,18%)] overflow-hidden ml-7">
+                                <table className="w-full text-xs">
+                                    <thead className="bg-[hsl(220,13%,10%)]">
+                                        <tr className="text-[hsl(220,8%,45%)]">
+                                            <th className="px-3 py-2 text-left font-medium w-12">Set</th>
+                                            <th className="px-3 py-2 text-left font-medium">Type</th>
+                                            <th className="px-3 py-2 text-left font-medium">Reps</th>
+                                            <th className="px-3 py-2 text-left font-medium">Weight</th>
+                                            <th className="px-3 py-2 text-left font-medium">RPE</th>
+                                            <th className="px-3 py-2 text-left font-medium">Rest</th>
+                                            <th className="w-8"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-[hsl(220,10%,15%)]">
+                                        {block.sets.map((set, setIndex) => (
+                                            <tr key={set.id} className="group/row hover:bg-[hsl(220,13%,11%)]">
+                                                <td className="px-3 py-2 text-[hsl(220,8%,50%)] font-mono">{setIndex + 1}</td>
+                                                <td className="px-3 py-2">
+                                                    <select
+                                                        className="bg-transparent border-none text-[hsl(40,15%,80%)] text-xs p-0"
+                                                        value={set.type}
+                                                        onChange={(e) => updateSet(block.id, set.id, 'type', e.target.value as Set['type'])}
+                                                    >
+                                                        <option value="working">Working</option>
+                                                        <option value="warmup">Warmup</option>
+                                                        <option value="drop">Drop</option>
+                                                    </select>
+                                                </td>
+                                                <td className="px-3 py-2">
+                                                    <input className="bg-transparent border-none text-[hsl(40,15%,85%)] text-xs w-12 p-0" value={set.reps} onChange={(e) => updateSet(block.id, set.id, 'reps', e.target.value)} />
+                                                </td>
+                                                <td className="px-3 py-2">
+                                                    <input className="bg-transparent border-none text-[hsl(40,15%,85%)] text-xs w-16 p-0" value={set.weight} placeholder="—" onChange={(e) => updateSet(block.id, set.id, 'weight', e.target.value)} />
+                                                </td>
+                                                <td className="px-3 py-2">
+                                                    <input className="bg-transparent border-none text-[hsl(40,15%,85%)] text-xs w-10 p-0" value={set.rpe} placeholder="—" onChange={(e) => updateSet(block.id, set.id, 'rpe', e.target.value)} />
+                                                </td>
+                                                <td className="px-3 py-2">
+                                                    <input className="bg-transparent border-none text-[hsl(40,15%,85%)] text-xs w-12 p-0" value={set.rest} onChange={(e) => updateSet(block.id, set.id, 'rest', e.target.value)} />
+                                                </td>
+                                                <td className="px-2 py-2 text-right">
+                                                    <button onClick={() => removeSet(block.id, set.id)} className="text-[hsl(220,8%,35%)] hover:text-red-400 opacity-0 group-hover/row:opacity-100">
+                                                        <Trash2 className="h-3 w-3" />
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                                <div className="p-2 bg-[hsl(220,13%,9%)] border-t border-[hsl(220,10%,15%)]">
+                                    <button onClick={() => addSet(block.id)} className="w-full text-[10px] text-[hsl(220,8%,50%)] hover:text-teal-400 flex items-center justify-center gap-1 py-1">
+                                        <Plus className="h-3 w-3" /> Add Set
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+
+                    <button onClick={addBlock} className="w-full py-6 border border-dashed border-[hsl(220,10%,20%)] rounded-lg text-sm text-[hsl(220,8%,50%)] hover:border-[hsl(220,10%,28%)] hover:text-[hsl(220,8%,65%)] flex items-center justify-center gap-2">
+                        <Plus className="h-4 w-4" /> Add Exercise
+                    </button>
+                </div>
+            )}
         </div>
     );
 }

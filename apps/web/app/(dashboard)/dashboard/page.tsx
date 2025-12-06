@@ -1,209 +1,177 @@
 'use client';
 
-import { Button, Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@peaks/ui";
-import { Calendar, Users, Library, ArrowRight, Activity, TrendingUp, AlertCircle } from "lucide-react";
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
+import { Button, Card } from "@peaks/ui";
+import {
+    ArrowRight,
+    AlertTriangle,
+    CheckCircle2,
+    MessageSquare,
+    Trophy,
+    ChevronRight,
+    Flame,
+    TrendingDown,
+    Heart,
+    Users,
+    Activity
+} from "lucide-react";
 
-const complianceData = [
-    { name: 'Mon', value: 85 },
-    { name: 'Tue', value: 88 },
-    { name: 'Wed', value: 92 },
-    { name: 'Thu', value: 90 },
-    { name: 'Fri', value: 85 },
-    { name: 'Sat', value: 95 },
-    { name: 'Sun', value: 98 },
+// Mock data
+const ATTENTION_REQUIRED = [
+    { id: '1', name: 'Mike Chen', avatar: 'MC', issue: 'Knee pain (3/10)', type: 'pain', time: '2h ago' },
+    { id: '2', name: 'James Wilson', avatar: 'JW', issue: '3 sessions missed', type: 'missed', time: '1d ago' },
+    { id: '3', name: 'Sarah Williams', avatar: 'SW', issue: 'High RPE trend (9.2)', type: 'overload', time: 'This week' },
 ];
 
-const workloadData = [
-    { name: 'Week 1', volume: 4000, intensity: 2400 },
-    { name: 'Week 2', volume: 3000, intensity: 1398 },
-    { name: 'Week 3', volume: 2000, intensity: 9800 },
-    { name: 'Week 4', volume: 2780, intensity: 3908 },
-    { name: 'Week 5', volume: 1890, intensity: 4800 },
-    { name: 'Week 6', volume: 2390, intensity: 3800 },
-    { name: 'Week 7', volume: 3490, intensity: 4300 },
+const RECENT_ACTIVITY = [
+    { id: '1', type: 'completed', athlete: 'Alex Johnson', detail: 'Leg Day Hypertrophy', time: '15m', icon: CheckCircle2, color: 'text-teal-600' },
+    { id: '2', type: 'pr', athlete: 'Emma Davis', detail: 'Back Squat 140kg (+5)', time: '1h', icon: Trophy, color: 'text-amber-600' },
+    { id: '3', type: 'comment', athlete: 'Mike Chen', detail: '"Knee feels better"', time: '2h', icon: MessageSquare, color: 'text-sky-600' },
+    { id: '4', type: 'completed', athlete: 'Sarah Williams', detail: 'Recovery Run', time: '3h', icon: CheckCircle2, color: 'text-teal-600' },
+    { id: '5', type: 'started', athlete: 'Carlos R.', detail: 'Upper Body Power', time: '5m', icon: Flame, color: 'text-orange-600' },
 ];
+
+const WEEK_DAYS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+const TRAINING_COUNTS = [12, 15, 8, 14, 10, 6, 4];
 
 export default function DashboardPage() {
+    const today = new Date();
+    const dayOfWeek = (today.getDay() + 6) % 7;
+
     return (
-        <div className="space-y-8">
-            <div className="flex justify-between items-end">
+        <div className="space-y-6">
+            {/* Header */}
+            <div className="flex justify-between items-start pb-4 border-b border-border">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Overview</h1>
-                    <p className="text-muted-foreground">Welcome back, Coach.</p>
+                    <h1 className="text-2xl font-semibold text-foreground">Pulse</h1>
+                    <p className="text-sm text-muted-foreground mt-0.5">Team overview</p>
                 </div>
-                <Button>
-                    <Calendar className="mr-2 h-4 w-4" /> New Season
-                </Button>
+                <div className="flex items-center gap-6">
+                    <div className="text-right">
+                        <div className="text-xl font-semibold text-foreground">24</div>
+                        <div className="text-xs text-muted-foreground">Athletes</div>
+                    </div>
+                    <div className="w-px h-8 bg-border" />
+                    <div className="text-right">
+                        <div className="text-xl font-semibold text-teal-600">92%</div>
+                        <div className="text-xs text-muted-foreground">Compliance</div>
+                    </div>
+                </div>
             </div>
 
-            {/* Quick Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Card className="border-border/50 bg-card/50 hover:bg-card/80 transition-colors">
-                    <CardHeader className="pb-2">
-                        <div className="flex items-center justify-between">
-                            <CardTitle className="text-sm font-medium text-muted-foreground">Total Athletes</CardTitle>
-                            <Users className="h-4 w-4 text-muted-foreground" />
-                        </div>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">24</div>
-                        <p className="text-xs text-muted-foreground mt-1 flex items-center">
-                            <TrendingUp className="h-3 w-3 mr-1 text-green-500" />
-                            <span className="text-green-500 font-medium">+2</span>
-                            <span className="ml-1">from last month</span>
-                        </p>
-                    </CardContent>
-                </Card>
-                <Card className="border-border/50 bg-card/50 hover:bg-card/80 transition-colors">
-                    <CardHeader className="pb-2">
-                        <div className="flex items-center justify-between">
-                            <CardTitle className="text-sm font-medium text-muted-foreground">Avg. Compliance</CardTitle>
-                            <Activity className="h-4 w-4 text-muted-foreground" />
-                        </div>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">92%</div>
-                        <p className="text-xs text-muted-foreground mt-1 flex items-center">
-                            <TrendingUp className="h-3 w-3 mr-1 text-green-500" />
-                            <span className="text-green-500 font-medium">+4%</span>
-                            <span className="ml-1">from last week</span>
-                        </p>
-                    </CardContent>
-                </Card>
-                <Card className="border-border/50 bg-card/50 hover:bg-card/80 transition-colors">
-                    <CardHeader className="pb-2">
-                        <div className="flex items-center justify-between">
-                            <CardTitle className="text-sm font-medium text-muted-foreground">Active Alerts</CardTitle>
-                            <AlertCircle className="h-4 w-4 text-muted-foreground" />
-                        </div>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">3</div>
-                        <p className="text-xs text-muted-foreground mt-1 flex items-center">
-                            <span className="text-red-500 font-medium">2 Injured</span>
-                            <span className="mx-1">•</span>
-                            <span className="text-yellow-500 font-medium">1 Low Compliance</span>
-                        </p>
-                    </CardContent>
-                </Card>
-            </div>
-
-            {/* Charts Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card className="border-border/50 bg-card/50">
-                    <CardHeader>
-                        <CardTitle>Team Compliance</CardTitle>
-                        <CardDescription>Daily adherence to prescribed workouts</CardDescription>
-                    </CardHeader>
-                    <CardContent className="h-[300px]">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={complianceData}>
-                                <defs>
-                                    <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
-                                        <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
-                                    </linearGradient>
-                                </defs>
-                                <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
-                                <XAxis dataKey="name" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
-                                <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}%`} />
-                                <Tooltip
-                                    contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: '8px' }}
-                                    itemStyle={{ color: '#fff' }}
-                                />
-                                <Area type="monotone" dataKey="value" stroke="#6366f1" strokeWidth={2} fillOpacity={1} fill="url(#colorValue)" />
-                            </AreaChart>
-                        </ResponsiveContainer>
-                    </CardContent>
-                </Card>
-
-                <Card className="border-border/50 bg-card/50">
-                    <CardHeader>
-                        <CardTitle>Training Volume</CardTitle>
-                        <CardDescription>Weekly total volume vs intensity</CardDescription>
-                    </CardHeader>
-                    <CardContent className="h-[300px]">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={workloadData}>
-                                <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
-                                <XAxis dataKey="name" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
-                                <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
-                                <Tooltip
-                                    contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: '8px' }}
-                                    itemStyle={{ color: '#fff' }}
-                                    cursor={{ fill: 'transparent' }}
-                                />
-                                <Bar dataKey="volume" fill="#6366f1" radius={[4, 4, 0, 0]} />
-                                <Bar dataKey="intensity" fill="#a855f7" radius={[4, 4, 0, 0]} />
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </CardContent>
-                </Card>
-            </div>
-
-            {/* Recent Activity & Quick Actions */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Card className="md:col-span-2 border-border/50 bg-card/50">
-                    <CardHeader>
-                        <CardTitle>Recent Activity</CardTitle>
-                        <CardDescription>Latest updates from your athletes</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="space-y-4">
-                            {[1, 2, 3, 4].map((i) => (
-                                <div key={i} className="flex items-center gap-4 p-3 rounded-lg hover:bg-accent/20 transition-colors border border-transparent hover:border-border/50">
-                                    <div className="h-10 w-10 rounded-full bg-indigo-500/20 flex items-center justify-center">
-                                        <Activity className="h-5 w-5 text-indigo-400" />
+            {/* Attention Required */}
+            <section>
+                <div className="flex items-center gap-2 mb-3">
+                    <AlertTriangle className="h-4 w-4 text-amber-600" />
+                    <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Needs Attention</h2>
+                    <span className="text-xs text-muted-foreground">({ATTENTION_REQUIRED.length})</span>
+                </div>
+                <div className="grid grid-cols-3 gap-3">
+                    {ATTENTION_REQUIRED.map((item) => (
+                        <div
+                            key={item.id}
+                            className="card-industrial rounded-lg p-4 hover:border-teal-500/30 transition-colors cursor-pointer group"
+                        >
+                            <div className="flex items-start justify-between mb-2">
+                                <div className="flex items-center gap-2">
+                                    <div className={`h-8 w-8 rounded flex items-center justify-center text-xs font-bold ${item.type === 'pain' ? 'bg-red-50 text-red-600 border border-red-100' :
+                                            item.type === 'missed' ? 'bg-amber-50 text-amber-600 border border-amber-100' :
+                                                'bg-orange-50 text-orange-600 border border-orange-100'
+                                        }`}>
+                                        {item.avatar}
                                     </div>
-                                    <div className="flex-1">
-                                        <div className="flex justify-between">
-                                            <p className="text-sm font-medium">New PR: Back Squat</p>
-                                            <span className="text-xs text-muted-foreground">2h ago</span>
-                                        </div>
-                                        <p className="text-xs text-muted-foreground">Alex Johnson lifted 140kg (was 135kg)</p>
+                                    <div>
+                                        <div className="text-sm font-medium text-foreground">{item.name}</div>
+                                        <div className="text-xs text-muted-foreground">{item.time}</div>
                                     </div>
                                 </div>
-                            ))}
+                                {item.type === 'pain' && <Heart className="h-3.5 w-3.5 text-red-500" />}
+                                {item.type === 'missed' && <Activity className="h-3.5 w-3.5 text-amber-500" />}
+                                {item.type === 'overload' && <TrendingDown className="h-3.5 w-3.5 text-orange-500" />}
+                            </div>
+                            <p className="text-xs text-muted-foreground mb-3">{item.issue}</p>
+                            <button className="w-full text-xs font-medium text-teal-700 hover:text-teal-800 flex items-center justify-center gap-1 py-1.5 rounded bg-teal-50 hover:bg-teal-100 transition-colors">
+                                Review <ChevronRight className="h-3 w-3" />
+                            </button>
                         </div>
-                    </CardContent>
-                    <CardFooter>
-                        <Button variant="ghost" className="w-full text-muted-foreground hover:text-foreground">View All Activity</Button>
-                    </CardFooter>
-                </Card>
-
-                <div className="space-y-6">
-                    <Card className="border-border/50 bg-card/50">
-                        <CardHeader>
-                            <CardTitle>Quick Actions</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-2">
-                            <Button variant="outline" className="w-full justify-start">
-                                <Calendar className="mr-2 h-4 w-4" /> Schedule Workout
-                            </Button>
-                            <Button variant="outline" className="w-full justify-start">
-                                <Users className="mr-2 h-4 w-4" /> Message Team
-                            </Button>
-                            <Button variant="outline" className="w-full justify-start">
-                                <Library className="mr-2 h-4 w-4" /> Add to Library
-                            </Button>
-                        </CardContent>
-                    </Card>
-
-                    <Card className="bg-linear-to-br from-indigo-600 to-purple-700 border-none text-white">
-                        <CardHeader>
-                            <CardTitle className="text-white">Pro Tips</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-sm opacity-90">
-                                Reviewing athlete logs within 24 hours increases compliance by 15%.
-                            </p>
-                        </CardContent>
-                        <CardFooter>
-                            <Button variant="secondary" size="sm" className="w-full">Read More</Button>
-                        </CardFooter>
-                    </Card>
+                    ))}
                 </div>
+            </section>
+
+            {/* Main Grid */}
+            <div className="grid grid-cols-3 gap-4">
+                {/* Week Snapshot */}
+                <div className="card-industrial rounded-lg p-4">
+                    <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4">This Week</h2>
+                    <div className="flex items-end justify-between gap-1.5 h-24">
+                        {WEEK_DAYS.map((day, i) => {
+                            const isToday = i === dayOfWeek;
+                            const height = (TRAINING_COUNTS[i] / Math.max(...TRAINING_COUNTS)) * 100;
+                            return (
+                                <div key={i} className="flex-1 flex flex-col items-center gap-1.5">
+                                    <div className="w-full flex flex-col items-center justify-end h-16">
+                                        <div
+                                            className={`w-full rounded-sm transition-all ${isToday ? 'bg-teal-500' : 'bg-secondary'
+                                                }`}
+                                            style={{ height: `${height}%` }}
+                                        />
+                                    </div>
+                                    <span className={`text-[10px] font-medium ${isToday ? 'text-teal-600' : 'text-muted-foreground'}`}>
+                                        {day}
+                                    </span>
+                                </div>
+                            );
+                        })}
+                    </div>
+                    <div className="flex justify-between mt-3 pt-3 border-t border-muted">
+                        <span className="text-xs text-muted-foreground">Total</span>
+                        <span className="text-xs font-medium text-foreground">{TRAINING_COUNTS.reduce((a, b) => a + b, 0)} sessions</span>
+                    </div>
+                </div>
+
+                {/* Activity Feed */}
+                <div className="col-span-2 card-industrial rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-3">
+                        <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Activity</h2>
+                        <button className="text-xs text-muted-foreground hover:text-teal-600 flex items-center gap-1 transition-colors">
+                            View all <ArrowRight className="h-3 w-3" />
+                        </button>
+                    </div>
+                    <div className="space-y-0.5">
+                        {RECENT_ACTIVITY.map((item) => (
+                            <div key={item.id} className="flex items-center gap-3 p-2 rounded hover:bg-secondary/50 transition-colors cursor-pointer">
+                                <div className={`h-7 w-7 rounded bg-secondary flex items-center justify-center ${item.color}`}>
+                                    <item.icon className="h-3.5 w-3.5" />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <span className="text-sm font-medium text-foreground">{item.athlete}</span>
+                                    <span className="text-muted-foreground mx-1.5">·</span>
+                                    <span className="text-sm text-foreground">{item.detail}</span>
+                                </div>
+                                <span className="text-xs text-muted-foreground font-mono">{item.time}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
+            {/* Quick Stats Row */}
+            <div className="grid grid-cols-4 gap-3">
+                {[
+                    { label: 'Active Now', value: '3', icon: Activity, color: 'text-teal-600' },
+                    { label: 'Completed Today', value: '12', icon: CheckCircle2, color: 'text-emerald-600' },
+                    { label: 'PRs This Week', value: '5', icon: Trophy, color: 'text-amber-600' },
+                    { label: 'Pending Review', value: '7', icon: MessageSquare, color: 'text-sky-600' },
+                ].map((stat) => (
+                    <div key={stat.label} className="card-industrial rounded-lg p-3 flex items-center gap-3">
+                        <div className={`h-9 w-9 rounded bg-secondary flex items-center justify-center ${stat.color}`}>
+                            <stat.icon className="h-4 w-4" />
+                        </div>
+                        <div>
+                            <div className="text-lg font-semibold text-foreground">{stat.value}</div>
+                            <div className="text-xs text-muted-foreground">{stat.label}</div>
+                        </div>
+                    </div>
+                ))}
             </div>
         </div>
     );

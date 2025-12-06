@@ -22,14 +22,16 @@ Este documento resume el enfoque técnico recomendado para construir la platafor
 
 ---
 
-## Propuesta de valor y objetivos (Ver PRODUCT_VISION.md)
+## Propuesta de valor (Ver PRODUCT_VISION.md)
 
-- **El Diario Compartido**: Transformar la relación coach-atleta mediante transparencia radical y comunicación constante. La app es donde "ocurre la conversación".
-- **Línea de Tiempo (Timeline)**: El corazón de la experiencia. Una vista fluida de pasado (historia), presente (foco) y futuro (promesa).
-- **Journaling Activo**: No solo checkboxes. Feedback cualitativo (RPE, dolor, notas de voz, sensaciones) que da contexto a los datos duros.
-- **Coach como Mentor**: Herramientas que permiten "sentir el pulso" de los atletas rápidamente (quién necesita atención hoy) para actuar preventivamente.
-- **Historia Viva**: Permitir al atleta volver atrás en el tiempo y ver su evolución real (fotos, PRs, notas), validando su esfuerzo a largo plazo.
-- **Inteligencia Susurrada**: IA que detecta patrones sutiles (sueño vs rendimiento) y sugiere ajustes sin invadir la autoridad del coach.
+Plataforma integral para entrenadores profesionales:
+- **Planificación multinivel**: Macrociclo → Mesociclo → Microciclo → Sesión
+- **Dos modalidades**: Preparación física (series/reps/carga) + Entrenamiento deportivo (drills/tiempo/técnica)
+- **Gestión de grupos**: Asignación masiva con personalización individual
+- **Librería dual**: Ejercicios predefinidos + personalizados con video
+- **Timeline navegable**: Historial completo del atleta (pasado/presente/futuro)
+- **Dashboard coach**: Cumplimiento, alertas, drill-down por atleta
+- **IA asistente**: Detección de patrones y sugerencias (no generación automática)
 
 ## Arquitectura base
 
